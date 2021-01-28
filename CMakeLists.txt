@@ -1,0 +1,61 @@
+cmake_minimum_required(VERSION 3.17)
+project(vvm)
+
+set(CMAKE_CXX_STANDARD 14)
+
+include_directories(.)
+
+add_executable(vvm
+        akishevdv.cpp
+        akishevdv.h
+        chernovaaa.cpp
+        chernovaaa.h
+        dudorovdv.cpp
+        dudorovdv.h
+        gladyshevadn.cpp
+        gladyshevadn.h
+        gukovaim.cpp
+        guskovaim.h
+        inshakovaas.cpp
+        inshakovaas.h
+        katinda.cpp
+        katinda.h
+        kulaginpa.cpp
+        kulaginpa.h
+        lab.cpp
+        lab.h
+        main.cpp
+        maksimovso.cpp
+        maksimovso.h
+        nikulovia.cpp
+        nikulovia.h
+        osipovda.cpp
+        osipovda.h
+        parshindi.cpp
+        parshindi.h
+        potapkinayuyu.cpp
+        potapkinayuyu.h
+        rodkinada.cpp
+        rodkinada.h
+        ruzaevaas.cpp
+        ruzaevaas.h
+        shabanovdo.cpp
+        shabanovdo.h
+        svetilnikovdb.cpp
+        svetilnikovdb.h
+        taynovaa.cpp
+        taynovaa.h
+        tepaykinma.cpp
+        tepaykinma.h
+        utkinnv.cpp
+        utkinnv.h
+        vecherskymp.cpp
+        vecherskymp.h
+        velmiskinnm.cpp
+        velmiskinnm.h
+        vidyaykinia.cpp
+        vidyaykinia.h
+        zavaryuhinayuv.cpp
+        zavaryuhinayuv.h
+        zhalninrv.cpp
+        zhalninrv.h)
