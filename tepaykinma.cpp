@@ -5,7 +5,7 @@
  */
 void tepaykinma::lab1()
 {
-  cout << "hello world!" << endl;
+  cout << "Hello World!" << endl;
 }
 
 
@@ -82,5 +82,5 @@ void tepaykinma::lab9()
 
 std::string tepaykinma::get_name()
 {
-  return "Zhalnin R.V.";
+  return "Tepaykin M.A.";
 }
