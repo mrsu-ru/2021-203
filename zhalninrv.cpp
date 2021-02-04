@@ -5,7 +5,7 @@
  */
 void zhalninrv::lab1()
 {
-  cout << "Hello world!!!" << endl;
+  cout << "Hello World!" << endl;
 }
 
 
