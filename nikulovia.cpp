@@ -82,5 +82,5 @@ void nikulovia::lab9()
 
 std::string nikulovia::get_name()
 {
-  return "Zhalnin R.V.";
+  return "Nikulov I.A.";
 }
