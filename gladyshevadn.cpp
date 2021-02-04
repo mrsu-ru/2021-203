@@ -5,7 +5,7 @@
  */
 void gladyshevadn::lab1()
 {
-
+	cout << "Hello, world!";
 }
 
 
@@ -82,5 +82,5 @@ void gladyshevadn::lab9()
 
 std::string gladyshevadn::get_name()
 {
-  return "Zhalnin R.V.";
+  return "Gladysheva D.N.";
 }
