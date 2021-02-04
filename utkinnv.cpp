@@ -5,7 +5,7 @@
  */
 void utkinnv::lab1()
 {
-  cout << "hello world!" << endl;
+  cout << "Hello world! Check" << endl;
 }
 
 
@@ -82,5 +82,5 @@ void utkinnv::lab9()
 
 std::string utkinnv::get_name()
 {
-  return "Zhalnin R.V.";
+  return "Utkin N.V.";
 }
