@@ -5,7 +5,7 @@
  */
 void osipovda::lab1()
 {
-  cout << "hello world!" << endl;
+  cout << "Hello world!!!" << endl;
 }
 
 
@@ -82,5 +82,5 @@ void osipovda::lab9()
 
 std::string osipovda::get_name()
 {
-  return "Zhalnin R.V.";
+  return "Osipov D.A.";
 }
