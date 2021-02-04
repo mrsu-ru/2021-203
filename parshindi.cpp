@@ -82,5 +82,5 @@ void parshindi::lab9()
 
 std::string parshindi::get_name()
 {
-  return "Zhalnin R.V.";
+  return "Parshin D.I.";
 }
