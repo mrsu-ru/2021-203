@@ -5,7 +5,7 @@
  */
 void svetilnikovdb::lab1()
 {
-  cout << "hello world!" << endl;
+  cout << "Hello world!" << endl;
 }
 
 
@@ -82,5 +82,5 @@ void svetilnikovdb::lab9()
 
 std::string svetilnikovdb::get_name()
 {
-  return "Zhalnin R.V.";
+  return "Svetilnikov D.B.";
 }
