@@ -5,7 +5,7 @@
  */
 void kulaginpa::lab1()
 {
-	cout << "Hello world!!!" << endl;
+	std::cout << "Hello world!!!!!" << std::endl;
 }
 
 
