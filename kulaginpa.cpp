@@ -5,7 +5,7 @@
  */
 void kulaginpa::lab1()
 {
-
+	cout << "Hello world!!!" << endl;
 }
 
 
@@ -82,5 +82,5 @@ void kulaginpa::lab9()
 
 std::string kulaginpa::get_name()
 {
-  return "Zhalnin R.V.";
+  return "Kulagin P.A.";
 }
