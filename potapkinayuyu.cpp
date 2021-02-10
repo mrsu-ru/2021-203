@@ -5,7 +5,7 @@
  */
 void potapkinayuyu::lab1()
 {
-  cout << "hello world!" << endl;
+  cout << "Hello World!" << endl;
 }
 
 
@@ -82,5 +82,5 @@ void potapkinayuyu::lab9()
 
 std::string potapkinayuyu::get_name()
 {
-  return "Zhalnin R.V.";
+  return "Potapkina Yu.Yu.";
 }
