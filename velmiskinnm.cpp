@@ -5,7 +5,7 @@
  */
 void velmiskinnm::lab1()
 {
-  cout << "hello world!" << endl;
+  cout << "HELLO, WORLD!" << endl;
 }
 
 
