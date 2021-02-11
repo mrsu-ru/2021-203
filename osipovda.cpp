@@ -22,6 +22,7 @@ void osipovda::lab2() {
             }
         }
         swap(A[i], A[mxi]);
+        swap(b[i], b[mxi]);
         for (int j = i + 1; j < N; j++) {
             double c = A[j][i] / A[i][i];
             for (int k = i + 1; k < N; k++) {
@@ -51,6 +52,7 @@ void osipovda::lab2() {
             }
         }
         swap(A[i], A[mxi]);
+        swap(b[i], b[mxi]);
         for (int j = i - 1; j >= 0; j--) {
             double c = A[j][i];
             A[j][i] = 0;
