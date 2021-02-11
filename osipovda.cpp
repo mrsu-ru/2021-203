@@ -43,16 +43,6 @@ void osipovda::lab2() {
     }
 
     for (int i = N - 1; i >= 0; i--) {
-        double mx = A[i][i];
-        int mxi = i;
-        for (int j = i - 1; j >= 0; j--) {
-            if (fabs(A[j][i]) > mx) {
-                mx = fabs(A[j][i]);
-                mxi = j;
-            }
-        }
-        swap(A[i], A[mxi]);
-        swap(b[i], b[mxi]);
         for (int j = i - 1; j >= 0; j--) {
             double c = A[j][i];
             A[j][i] = 0;
