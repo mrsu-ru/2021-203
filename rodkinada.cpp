@@ -5,7 +5,7 @@
  */
 void rodkinada::lab1()
 {
-  cout << "hello world!" << endl;
+  cout << "Hello, world!" << endl;
 }
 
 
@@ -82,5 +82,5 @@ void rodkinada::lab9()
 
 std::string rodkinada::get_name()
 {
-  return "Zhalnin R.V.";
+  return "Rodkina D.A.";
 }

@@ -5,7 +5,7 @@
  */
 void inshakovaas::lab1()
 {
-
+    cout<<"Hello world!";
 }
 
 
@@ -82,5 +82,5 @@ void inshakovaas::lab9()
 
 std::string inshakovaas::get_name()
 {
-  return "Zhalnin R.V.";
+  return "Inshakova A.S.";
 }

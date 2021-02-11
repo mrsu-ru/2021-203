@@ -82,5 +82,5 @@ void ruzaevaas::lab9()
 
 std::string ruzaevaas::get_name()
 {
-  return "Zhalnin R.V.";
+  return "Ruzaeva A.S.";
 }
