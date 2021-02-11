@@ -5,7 +5,7 @@
  */
 void inshakovaas::lab1()
 {
-    cout<<"Hello world!"
+    cout<<"Hello world!";
 }
 
 
