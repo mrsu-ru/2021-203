@@ -18,7 +18,6 @@ void taynovaa::lab2() {
             if (fabs(A[index_max][i]) < fabs(A[m][i]))
                 index_max = m;
         }
-        if (fabs(A[index_max][i]) < 1e-20) continue;
 
         swap(A[index_max], A[i]);
         swap(b[index_max], b[i]);
