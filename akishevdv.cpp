@@ -5,7 +5,7 @@
  */
 void akishevdv::lab1()
 {
-
+    cout << "Hello world!" << endl;
 }
 
 
@@ -82,5 +82,5 @@ void akishevdv::lab9()
 
 std::string akishevdv::get_name()
 {
-  return "Zhalnin R.V.";
+  return "Akishev D.V.";
 }

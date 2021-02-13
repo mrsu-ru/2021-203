@@ -5,7 +5,7 @@
  */
 void katinda::lab1()
 {
-
+    cout << "Hello world!";
 }
 
 
@@ -82,5 +82,5 @@ void katinda::lab9()
 
 std::string katinda::get_name()
 {
-  return "Zhalnin R.V.";
+  return "Katin D.A.";
 }

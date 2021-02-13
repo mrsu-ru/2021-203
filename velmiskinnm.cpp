@@ -5,7 +5,7 @@
  */
 void velmiskinnm::lab1()
 {
-  cout << "hello world!" << endl;
+  cout << "HELLO, WORLD!" << endl;
 }
 
 
@@ -82,5 +82,5 @@ void velmiskinnm::lab9()
 
 std::string velmiskinnm::get_name()
 {
-  return "Zhalnin R.V.";
+  return "Velmiskin N.M.";
 }

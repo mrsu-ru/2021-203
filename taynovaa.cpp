@@ -82,5 +82,5 @@ void taynovaa::lab9()
 
 std::string taynovaa::get_name()
 {
-  return "Zhalnin R.V.";
+  return "Taynov A. A.";
 }

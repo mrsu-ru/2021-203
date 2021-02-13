@@ -5,7 +5,7 @@
  */
 void shabanovdo::lab1()
 {
-  cout << "hello world!" << endl;
+  cout << "Hello World!" << endl;
 }
 
 
@@ -82,5 +82,5 @@ void shabanovdo::lab9()
 
 std::string shabanovdo::get_name()
 {
-  return "Zhalnin R.V.";
+  return "Shabanov D.O.";
 }
