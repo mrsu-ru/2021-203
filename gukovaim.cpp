@@ -5,6 +5,7 @@
  */
 void guskovaim::lab1()
 {
+	cout << "Hello world!!!";
 
 }
 
@@ -82,5 +83,5 @@ void guskovaim::lab9()
 
 std::string guskovaim::get_name()
 {
-  return "Zhalnin R.V.";
+  return "Guskova I.M.";
 }

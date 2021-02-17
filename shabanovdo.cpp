@@ -5,7 +5,7 @@
  */
 void shabanovdo::lab1()
 {
-  cout << "hello world!" << endl;
+  cout << "Hello World!" << endl;
 }
 
 
