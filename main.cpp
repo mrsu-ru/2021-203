@@ -28,7 +28,9 @@
 #include "shabanovdo.h"
 #include "zhalninrv.h"
 
+
 void print_usage(char* name);
+
 
 int main(int argc, char** argv)
 {
@@ -126,6 +128,7 @@ int main(int argc, char** argv)
   //delete l; // TODO:
   return 0;
 }
+
 
 void print_usage(char* name)
 {
