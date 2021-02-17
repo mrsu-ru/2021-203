@@ -16,7 +16,6 @@ void akishevdv::lab2()
 {
     int max;
     double sum = 0;
-
     //прямой ход
     for (int i = 0; i < N; i++)
     {
