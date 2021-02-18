@@ -57,7 +57,6 @@ void akishevdv::lab2()
             b[j] = b[j] - A[j][i] * b[i];
             A[j][i] = 0;
         }
-        delete[]help_one;
     }
 
     //обратный ход
