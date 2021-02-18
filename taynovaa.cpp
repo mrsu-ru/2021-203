@@ -14,6 +14,7 @@ void taynovaa::lab1() {
 void taynovaa::lab2() {
     for (int i = 0; i < N; i++) {
         int index_max = i;
+
         for (int m = i; m < N; m++) {
             if (fabs(A[index_max][i]) < fabs(A[m][i]))
                 index_max = m;
@@ -23,13 +24,14 @@ void taynovaa::lab2() {
         swap(b[index_max], b[i]);
 
         for (int j = i + 1; j < N; j++) {
-            double c = A[i][j] / A[i][i];
+            double c = A[j][i] / A[i][i];
             for (int k = i; k < N; k++) {
                 A[j][k] -= c * A[i][k];
             }
             b[j] -= c * b[i];
         }
     }
+    // обратный
     for (int i = N - 1; i >= 0; i--) {
         double c = 0;
         for (int j = i + 1; j < N; j++) {
