@@ -5,7 +5,7 @@
  */
 void chernovaaa::lab1()
 {
-
+    cout << "Hello World!";
 }
 
 
@@ -82,5 +82,5 @@ void chernovaaa::lab9()
 
 std::string chernovaaa::get_name()
 {
-  return "Zhalnin R.V.";
+  return "Chernova A.A.";
 }
