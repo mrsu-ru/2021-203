@@ -36,7 +36,20 @@ void utkinnv::lab2() {
  * Метод прогонки
  */
 void utkinnv::lab3() {
-
+    double *al = new double[N];
+    double *bt = new double[N];
+    al[0] = -A[0][1]/A[0][0]; bt[0]=b[0]/A[0][0];
+    for(int i = 1; i < N; i++){
+        double temp = A[i][i - 1] * al[i-1]+A[i][i];
+        al[i] = -A[i][i + 1]/temp;
+        bt[i] = (b[i] - A[i][i - 1] * bt[i - 1])/temp;
+    }
+    x[N-1] = bt[N - 1];
+    for(int i = N - 2; i>-1; i--){
+        x[i]=al[i]*x[i+1] + bt[i];
+    }
+    delete[] al;
+    delete[] bt;
 }
 
 
