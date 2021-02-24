@@ -27,7 +27,7 @@ void svetilnikovdb::lab2()
                 A[j][k] -= c * A[i][k];
             }
             b[j] -= c * b[i];
-            A[j][i] = 0;//Т. к. идём с i+1.
+            A[j][i] = 0;
         }
     }
     for(int i = 0; i < N; i++){
