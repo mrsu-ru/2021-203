@@ -5,6 +5,7 @@
  */
 void dudorovdv::lab1()
 {
+    cout << "hello world!" << endl;
 }
 
 
