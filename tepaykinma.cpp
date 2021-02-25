@@ -70,7 +70,39 @@ void tepaykinma::lab2() {
  */
 void tepaykinma::lab3()
 {
+    double* y = new double[N];
+    double* alpha = new double[N];
+    double* beta = new double[N];
 
+    //  c = A[i][i+1]  i = 0,...,N-2
+    //  a = A[i][i-1]  i = 0,...,N-1
+
+    y[0] = A[0][0];
+    alpha[0] = -A[0][0+1] / y[0];
+    beta[0] = b[0] / y[0];
+    foran(i, 1, N - 1)
+    {
+        y[i] = A[i][i] + A[i][i-1]*alpha[i-1];
+        alpha[i] = -A[i][i+1] / y[i];
+        beta[i] = (b[i] - A[i][i-1]*beta[i-1]) / y[i];
+    }
+    y[N - 1] = A[N - 1][N - 1] + A[N - 1][N - 2] * alpha[N - 2];
+    beta[N - 1] = (b[N - 1] - A[N - 1][N - 2] * beta[N - 2]) / y[N - 1];
+
+    x[N - 1] = beta[N - 1];
+    for(int i = N - 2; i >= 0; i--)
+    {
+        x[i] = alpha[i]*x[i+1] + beta[i];
+
+    }
+
+
+
+
+
+    delete[] y;
+    delete[] alpha;
+    delete[] beta;
 }
 
 
