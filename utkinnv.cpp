@@ -36,7 +36,19 @@ void utkinnv::lab2() {
  * Метод прогонки
  */
 void utkinnv::lab3() {
-
+    auto al = new double[N];
+    auto bt = new double[N];
+    al[0] = -A[0][1] / A[0][0];
+    bt[0] = b[0] / A[0][0];
+    for (int i = 1; i < N; i++) {
+        double temp = A[i][i - 1] * al[i - 1] + A[i][i];
+        al[i] = -A[i][i + 1] / temp;
+        bt[i] = (b[i] - A[i][i - 1] * bt[i - 1]) / temp;
+    }
+    x[N - 1] = bt[N - 1];
+    for (int i = N - 2; i > -1; i--) x[i] = al[i] * x[i + 1] + bt[i];
+    delete[] al;
+    delete[] bt;
 }
 
 
@@ -44,7 +56,34 @@ void utkinnv::lab3() {
  * Метод Холецкого
  */
 void utkinnv::lab4() {
+    auto **s = new double *[N];
+    auto *d = new double[N];
+    for (int i = 0; i < N; ++i) {
+        s[i] = new double[N];
+    }
+    for (int i = 0; i < N; i++) {
+        for (int k = 0; k < i; k++) A[i][i] -= s[k][i] * d[k] * s[k][i];
+        d[i] = A[i][i] < 0 ? -1 : 1;
+        s[i][i] = sqrt(d[i] * A[i][i]);
+        for (int j = i + 1; j < N; j++) {
+            for (int k = 0; k < j; k++) A[i][j] -= s[k][i] * d[k] * s[k][j];
+            s[i][j] = A[i][j] / (s[i][i] * d[i]);
+        }
+    }
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < i; j++) b[i] -= s[j][i] * d[j] * b[j];
+        b[i] /= s[i][i] * d[i];
+    }
+    for (int i = N - 1; i > -1; i--) {
+        for (int k = i + 1; k < N; k++) b[i] -= s[i][k] * x[k];
+        x[i] = b[i] / s[i][i];
+    }
 
+    for (int i = 0; i < N; i++) {
+        delete[] s[i];
+    }
+    delete[] s;
+    delete[] d;
 }
 
 
