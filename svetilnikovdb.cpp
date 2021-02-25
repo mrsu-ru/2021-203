@@ -50,7 +50,37 @@ void svetilnikovdb::lab2()
  */
 void svetilnikovdb::lab3()
 {
+    bool converge = false;
+    for(int i = 0; i < N; i++){
+        if(fabs(A[i][i]) < fabs(A[i][i-1]) + fabs(A[i][i+1])) return;
+        if(fabs(A[i][i]) > fabs(A[i][i-1]) + fabs(A[i][i+1])) converge = true;
+    }
+    if(fabs(A[0][1]) > 1 || fabs(A[N-1][N-2]) > 1) return;
+    if(fabs(A[0][1]) + fabs(A[N-1][N-2])<2) converge = true;
+    if(converge == false) return;
 
+    double alpha[N];
+    double beta[N];
+    for(int i = 0; i < N; i++){
+        if(i == 0) {
+            alpha[i] = -A[i][i+1] / A[i][i];
+            beta[i] = b[i] / A[i][i];
+        }
+        else if(i == N - 1){
+            beta[i] = (b[i] - A[i][i-1] * beta[i-1]) / (A[i][i] + A[i][i-1] * alpha[i-1]);
+        }
+        else{
+            x[i] = A[i][i] + A[i][i-1] * alpha[i-1];
+            alpha[i] = -A[i][i+1] / x[i];
+            beta[i] = (b[i] - A[i][i-1] * beta[i - 1]) / x[i];
+        }
+    }
+    for(int i = N-1; i >= 0; i--){
+        if(i == N-1) x[i] = beta[i];
+        else{
+            x[i] = alpha[i] * x[i+1] + beta[i];
+        }
+    }
 }
 
 
