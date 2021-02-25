@@ -74,7 +74,31 @@ void kulaginpa::lab2()
  */
 void kulaginpa::lab3()
 {
+	size_t n = N;
+	double * alpha = new double[N];
+	double * beta = new double[N];
 
+	double y = A[0][0];
+	alpha[0] = -A[0][1] / y;
+	beta[0] = b[0] / y;
+
+	for (size_t i = 1; i < n - 1; i++) // прямой ход
+	{
+		y = A[i][i] + A[i][i - 1] * alpha[i - 1];
+		alpha[i] = -A[i][i + 1] / y;
+		beta[i] = (b[i] - A[i][i - 1] * beta[i - 1]) / y;
+	}
+	y = A[n - 1][n - 1] + A[n - 1][n - 2] * alpha[n - 2];
+	beta[n - 1] = (b[n - 1] - A[n - 1][n - 2] * beta[n - 2]) / y;
+
+	x[n - 1] = beta[n - 1];
+	for (int i = N - 2; i >= 0; i--) 
+	{
+		x[i] = alpha[i] * x[i + 1] + beta[i];
+	}
+
+	delete[] alpha;
+	delete[] beta;
 }
 
 
