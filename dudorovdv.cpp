@@ -81,5 +81,5 @@ void dudorovdv::lab9()
 
 std::string dudorovdv::get_name()
 {
-  return "Zhalnin R.V.";
+  return "Dudorov D.V.";
 }
