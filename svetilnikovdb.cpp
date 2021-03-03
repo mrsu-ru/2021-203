@@ -90,7 +90,40 @@ void svetilnikovdb::lab3()
  */
 void svetilnikovdb::lab4()
 {
-
+    for(int i = 0; i < N; i++){
+        for(int j = 0; j < N; j++)
+            if(A[i][j] != A[j][i]) return;
+    }
+    double* D = new double[N];
+    double** S = new double*[N];
+    double sds = 0;
+    for(int i = 0; i < N; i++) S[i] = new double[N];
+    for(int i = 0; i < N; i++){
+        sds = 0;
+        for(int kd = 0; kd < i; kd++) sds += S[kd][i] * D[kd] * S[kd][i];
+        if(A[i][i] - sds < 0) D[i] = -1;
+        else D[i] = 1;
+        S[i][i] = sqrt(fabs(A[i][i]-sds));
+        for(int j = i + 1; j < N; j++){
+            sds = 0;
+            for(int k = 0; k < j; k++) sds += S[k][i] * D[k] * S[k][j];
+            S[i][j] = (A[i][j] - sds) / (S[i][i] * D[i]);
+        }
+    }
+    double* y = new double[N];
+    for(int i = 0; i < N; i++) {
+        y[i] = b[i];
+        for (int j = 0; j < i; j++) y[i] -= S[j][i] * D[j] * y[j];
+        y[i] /= S[i][i] * D[i];
+    }
+    for(int i = N - 1; i >= 0; i--){
+        for(int j = i + 1; j < N; j++) y[i] -= S[i][j] * x[j];
+        x[i] = y[i] / S[i][i];
+    }
+    for(int i = 0; i < N; i++) delete[] S[i];
+    delete[] S;
+    delete[] D;
+    delete[] y;
 }
 
 
