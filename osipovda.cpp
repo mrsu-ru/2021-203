@@ -84,7 +84,44 @@ void osipovda::lab3() {
  * Метод Холецкого
  */
 void osipovda::lab4() {
+    double **S = new double *[N];
+    for (int i = 0; i < N; i++) {
+        S[i] = new double[N];
+    }
+    double *D = new double[N];
 
+    //find S - up triangle
+    for (int i = 0; i < N; i++) {
+        for (int k = 0; k < i; k++) {
+            A[i][i] -= S[k][i] * D[k] * S[k][i];
+        }
+        D[i] = A[i][i] >= 0 ? 1 : -1;
+        S[i][i] = sqrt(D[i] * A[i][i]);
+        for (int j = i + 1; j < N; j++) {
+            for (int k = 0; k < j; k++) {
+                A[i][j] -= S[k][i] * D[k] * S[k][j];
+            }
+            S[i][j] = A[i][j] / (S[i][i] * D[i]);
+        }
+    }
+
+    //StDSx=b, StDy = b, find y
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < i; j++) b[i] -= S[j][i] * D[j] * b[j];
+        b[i] /= S[i][i] * D[i];
+    }
+
+    //Sx = y, find x
+    for (int i = N - 1; i >= 0; i--) {
+        for (int k = i + 1; k < N; k++) b[i] -= S[i][k] * x[k];
+        x[i] = b[i] / S[i][i];
+    }
+
+    for (int i = 0; i < N; i++) {
+        delete[] S[i];
+    }
+    delete[] S;
+    delete[] D;
 }
 
 
