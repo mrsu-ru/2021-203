@@ -70,7 +70,6 @@ void zavaryuhinayuv::lab3()
     int i;
     double alp [N];
     double bet [N];
-
     alp [0] =  -A[0][1] / A[0][0];
     bet [0] = b[0]/ A[0][0];
     for (i=1; i<N; i++ ){
@@ -79,7 +78,7 @@ void zavaryuhinayuv::lab3()
     }
     x[N-1]=bet[N-1];
     for (i=N-2; i>-1; i--){
-        x[i]=bet[i] - alp[i] * x[i + 1];
+        x[i]=bet[i] + alp[i] * x[i + 1];
     }
 
 }
