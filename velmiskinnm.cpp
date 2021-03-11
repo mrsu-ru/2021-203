@@ -59,7 +59,21 @@ void velmiskinnm::lab2(){
  */
 void velmiskinnm::lab3()
 {
+    double y1, alpha[N], beta[N];
+    int N1 = N-1;
+    y1 = A[0][0];
+    alpha[0] = -A[0][1] / y1;
+    beta[0] = b[0] / y1  ;
+    for (int i = 1; i < N; i++) {
+        y1 = A[i][i] + A[i][i - 1] * alpha[i - 1];
+        alpha[i] = -A[i][i + 1] / y1;
+        beta[i] = (b[i] - A[i][i - 1] * beta[i - 1]) / y1;
+    }
+    x[N1] = beta[N1];
 
+    for (int i = N1 - 1; i >= 0; i--) {
+        x[i] = alpha[i] * x[i + 1] + beta[i];
+    }
 }
 
 
