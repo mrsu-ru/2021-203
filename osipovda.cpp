@@ -129,7 +129,28 @@ void osipovda::lab4() {
  * Метод Якоби или Зейделя
  */
 void osipovda::lab5() {
+    double *newX = new double[N];
+    double eps = 1.e-9;
+    bool flag = true;
 
+    for (int i = 0; i < N; i++) x[i] = 1;
+
+    while (flag) {
+        flag  = false;
+        for (int i = 0; i < N; i++) {
+            newX[i] = b[i];
+            for (int j = 0; j < N; j++) {
+                if (i == j) continue;
+                newX[i] += -A[i][j] * x[j];
+            }
+            newX[i] /= A[i][i];
+
+            if (!flag && fabs(newX[i] - x[i]) > eps) flag = true;
+            x[i] = newX[i];
+        }
+    }
+
+    delete[] newX;
 }
 
 
