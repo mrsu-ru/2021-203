@@ -104,7 +104,84 @@ void akishevdv::lab3()
  */
 void akishevdv::lab4()
 {
+    double *d = new double[N];
+    double *arr_sum = new double[N];
+    double *y = new double[N];
 
+    double **s = new double*[N];
+    for (int i = 0; i < N; i++)
+        s[i] = new double[N];
+
+    for (int i = 0; i < N; i++)
+    {
+        arr_sum[i] = A[i][i];
+    }
+
+    if (arr_sum[0] > 0)
+        d[0] = 1;
+    else
+        d[0] = -1;
+
+    s[0][0] = sqrt(fabs(arr_sum[0]));
+    for (int j = 1; j < N; j++)
+    {
+        s[0][j] = A[0][j] / (d[0] * s[0][0]);
+    }
+    double help_num = 0;
+    for (int i = 1; i < N; i++)
+    {
+        for (int k = 0; k < i; k++)
+        {
+            arr_sum[i] -= d[k] * pow(s[k][i], 2);
+        }
+        if (arr_sum[i] > 0)
+        {
+            d[i] = 1;
+        }
+        else
+        {
+            d[i] = -1;
+        }
+        s[i][i] = sqrt(fabs(arr_sum[i]));
+
+        for (int j = i + 1; j < N; j++)
+        {
+            for (int k = 0; k < i; k++)
+            {
+                help_num += d[k] * s[k][i] * s[k][j];
+            }
+
+            s[i][j] = (A[i][j] - help_num) / (d[i] * s[i][i]);
+            help_num = 0;
+        }
+    }
+
+    //---------Нахождение корней--------
+    y[0] = b[0] / s[0][0];
+    for (int i = 1; i < N; i++)
+    {
+        for (int k = 0; k < i; k++)
+        {
+            help_num += s[k][i] * y[k];
+        }
+        y[i] = (b[i] - help_num) / s[i][i];
+        help_num = 0;
+    }
+    x[N - 1] = y[N - 1] / (d[N - 1] * s[N - 1][N - 1]);
+    for (int i = N - 2; i >= 0; i--)
+    {
+        for (int k = i + 1; k < N; k++)
+        {
+            help_num += s[i][k] * x[k];
+        }
+        x[i] = (y[i] - d[i] * help_num) / (d[i] * s[i][i]);
+        help_num = 0;
+    }
+
+    delete[]d;
+    delete[]arr_sum;
+    delete[]y;
+    delete[]s;
 }
 
 
