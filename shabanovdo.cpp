@@ -14,63 +14,61 @@ void shabanovdo::lab1()
  */
 void shabanovdo::lab2()
 {
-#define forn(i, n) for(int i=0; i<n; i++) //Максим молодец)))
-#define foran(i,a, n) for(int i=a; i<n; i++)
+    int m = N + 1;
 
-
-#include "shabanovdo.h"
-
-    /**
-     * Метод Гаусса с выбором главного элемента
-     */
-
-        int n = N;
-
-        for (int i = 0; i < n; i++)
-        {
-            int maxi = i;
-            for (int j = i + 1; j < n; j++)
-            {
-                if (A[j][i] > A[maxi][i]) maxi = j;
-            }
-            for (int k = 0; k < n; k++)
-            {
-                swap(A[maxi][k], A[i][k]);
-            }
-            swap(b[maxi], b[i]);
-
-            double first = A[i][i];
-            for (int j = i; j < n; j++)
-            {
-                A[i][j] /= first;
-            }
-            b[i] /= first;
-            for (int j = i + 1; j < n; j++)
-            {
-                first = A[j][i];
-
-                for (int k = i; k < n; k++)
-
-                {
-                    A[j][k] -= A[i][k] * first;
-                }
-                b[j] -= b[i] * first;
-            }
+    double** arr = new double*[N];
+    for (int i = 0; i < N; i++) {
+        arr[i] = new double[N + 1];
+    }
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            arr[i][j] = A[i][j];
         }
-
-
-        for (int i = n; i >= 0; i--)
-        {
-            for (int j = i + 1; j < n; j++)
-            {
-                b[i] += -A[i][j] * x[j];
-                A[i][j] = 0;
-            }
-            x[i] = b[i];
-        }
-
     }
 
+    for (int i = 0; i < N; i++) {
+        arr[i][N] = b[i];
+    }
+
+//---------прямой ход---------—
+    for (int i = 0; i < N; i++) {
+        int max = i;
+        for (int j = i + 1; j < N; j++) {
+            if (abs(arr[j][i]) > abs(arr[max][i]))
+                max = j;
+        }
+        if (max != i) {
+            for (int k = 0; k < N + 1; k++) {
+                swap(arr[i][k], arr[max][k]);
+            }
+        }
+
+        double helpel = arr[i][i];
+        for (int j = i; j < N + 1; j++) {
+            arr[i][j] /= helpel;
+        }
+        for (int j = i + 1; j < N; j++) {
+            helpel = arr[j][i];
+            arr[j][i] = 0;
+            for (int k = i + 1; k < N + 1; k++)
+                arr[j][k] -= arr[i][k] * helpel;
+        }
+    }
+
+//------------обратный ход---------—
+    for (int i = N - 1; i > 0; i--) {
+        double h = 0;
+        for (int j = i + 1; j < m; j++) {
+            double helpel = arr[i - 1][j - 1];
+            arr[i - 1][j - 1] = 0;
+            h += arr[j - 1][m - 1] * helpel;
+        }
+        arr[i - 1][m - 1] = arr[i - 1][m - 1] - h;
+    }
+
+    for (int i = 0; i < N; i++) {
+        x[i] = arr[i][N];
+    }
 }
 
 
