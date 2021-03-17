@@ -103,7 +103,7 @@ void svetilnikovdb::lab4()
         for(int kd = 0; kd < i; kd++) sds += S[kd][i] * D[kd] * S[kd][i];
         if(A[i][i] - sds < 0) D[i] = -1;
         else D[i] = 1;
-        S[i][i] = sqrt(fabs(A[i][i] - sds));
+        S[i][i] = sqrt(fabs(A[i][i]-sds));
         for(int j = i + 1; j < N; j++){
             sds = 0;
             for(int k = 0; k < j; k++) sds += S[k][i] * D[k] * S[k][j];
@@ -133,7 +133,23 @@ void svetilnikovdb::lab4()
  */
 void svetilnikovdb::lab5()
 {
-
+    bool exit = false;
+    double ix = 0;
+    for (int i = 0; i < N; i++) x[i] = 0;
+    while(exit == false){
+        exit = true;
+        for(int i = 0; i < N; i++){
+            ix = b[i];
+            for(int j = 0; j < N; j++){
+                if(i != j) {
+                    ix -= A[i][j] * x[j];
+                }
+            }
+            ix /= A[i][i];
+            if(fabs(ix - x[i]) > 1E-9) exit = false;
+            x[i] = ix;
+        }
+    }
 }
 
 
