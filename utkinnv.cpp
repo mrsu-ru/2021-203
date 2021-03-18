@@ -99,7 +99,7 @@ void utkinnv::lab5() {
         isContinue = false;
         for (int i = 0; i < N; i++) {
             X[i] = b[i];
-            for (int j = 0; j < i; j++) X[i] -= A[i][j] * X[j];
+            for (int j = 0; j < i; j++) X[i] -= A[i][j] * x[j];
             for (int j = i + 1; j < N; j++) X[i] -= A[i][j] * x[j];
             X[i] /= A[i][i];
             if (fabs(X[i] - x[i]) > 1e-9) isContinue = true;
