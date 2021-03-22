@@ -202,10 +202,12 @@ void akishevdv::lab5()
             double sum = 0;
 
             for (int j = 0; j < i; j++){
-                sum += A[i][j] * x[j];}
+                sum += A[i][j] * x[j];
+            }
 
             for (int j = i + 1; j < N; j++){
-                sum += A[i][j] * previous_result[j];}
+                sum += A[i][j] * previous_result[j];
+            }
 
             x[i] = (b[i] - sum) / A[i][i];
         }
