@@ -190,6 +190,36 @@ void akishevdv::lab4()
  */
 void akishevdv::lab5()
 {
+    double eps = 1e-20;
+
+    double* previous_result = new double[N];
+
+    while (1) {
+        for (int i = 0; i < N; i++)
+            previous_result[i] = x[i];
+
+        for (int i = 0; i < N; i++) {
+            double sum = 0;
+
+            for (int j = 0; j < i; j++){
+                sum += A[i][j] * x[j];}
+
+            for (int j = i + 1; j < N; j++){
+                sum += A[i][j] * previous_result[j];}
+
+            x[i] = (b[i] - sum) / A[i][i];
+        }
+
+        double difference = abs(x[0] - previous_result[0]);
+        for (int i = 1; i < N; i++)
+            if (abs(x[i] - previous_result[i]) > difference)
+                difference = abs(x[i] - previous_result[i]);
+
+        if (difference < eps)
+            break;
+    }
+
+    delete[] previous_result;
 
 }
 
