@@ -190,7 +190,7 @@ void akishevdv::lab4()
  */
 void akishevdv::lab5()
 {
-    double eps = 1e-20;
+    double eps = 1e-9;
 
     double* previous_result = new double[N];
 
