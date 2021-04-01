@@ -133,7 +133,23 @@ void svetilnikovdb::lab4()
  */
 void svetilnikovdb::lab5()
 {
-
+    bool exit = false;
+    double ix = 0;
+    for (int i = 0; i < N; i++) x[i] = 0;
+    while(exit == false){
+        exit = true;
+        for(int i = 0; i < N; i++){
+            ix = b[i];
+            for(int j = 0; j < N; j++){
+                if(i != j) {
+                    ix -= A[i][j] * x[j];
+                }
+            }
+            ix /= A[i][i];
+            if(fabs(ix - x[i]) > 1E-9) exit = false;
+            x[i] = ix;
+        }
+    }
 }
 
 
