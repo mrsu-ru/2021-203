@@ -108,7 +108,57 @@ void kulaginpa::lab3()
  */
 void kulaginpa::lab4()
 {
+	size_t n = N;
+	double * D = new double[N];
+	double **S = new double*[N];
+	S[0] = new double[N * N];
+	for (size_t i = 0; i < n; i++)
+	{
+		S[i] = S[0] + i * N;
+	}
 
+	for (size_t i = 0; i < n; i++)
+	{
+		double tmp = A[i][i];
+		for (size_t k = 0; k < i; k++)
+		{
+			tmp -= S[k][i] * S[k][i] * D[k];
+		}
+		D[i] = tmp > 0 ? 1 : -1;
+		S[i][i] = sqrt(tmp * D[i]);
+		for (size_t j = i + 1; j < n; j++)
+		{
+			double tmp2 = A[i][j];
+			for (size_t k = 0; k < i; k++)
+			{
+				tmp2 -= S[k][i] * D[k] * S[k][j];
+			}
+			S[i][j] = tmp2 / (S[i][i] * D[i]);
+		}
+	}
+
+	for (size_t i = 0; i < n; i++) 
+	{
+		for (size_t j = 0; j < i; j++) 
+		{
+			b[i] -= S[j][i] * D[j] * b[j];
+		}
+		b[i] /= S[i][i] * D[i];
+	}
+
+	
+	for (int i = N - 1; i >= 0; i--) 
+	{
+		for (size_t k = i + 1; k < n; k++) 
+		{
+			b[i] -= S[i][k] * x[k];
+		}
+		x[i] = b[i] / S[i][i];
+	}
+
+	delete S[0];
+	delete S;
+	delete D;
 }
 
 
