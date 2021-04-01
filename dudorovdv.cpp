@@ -16,7 +16,7 @@ void dudorovdv::lab2()
 {
     int i=0;
     int j=0;
-    double c;
+ //   double c;
     double d;
     int k;
     for (i = 0; i < N; i++) {
@@ -25,13 +25,13 @@ void dudorovdv::lab2()
             if (abs(A[max][i])<abs(A[j][i])) max = j;
         }
         swap(A[i], A[max]);
-        swap(B[i], B[max]);
+        swap(b[i],b[max]);
         for (j = i + 1; j < N; j++) {
             double c = A[j][i] / A[i][i];
             for (k = i + 1; k < N; k++){
                 A[j][k] -= c * A[i][k];
             }
-            B[j] -= c * b[i];
+            b[j] -= c * b[i];
             A[j][i] = 0;
         }
     }
@@ -40,10 +40,10 @@ void dudorovdv::lab2()
         for(j = 0; j < N; j++){
             A[i][j]/= d;
         }
-        B[i]/=d;
+        b[i]/=d;
     }
     for (i = N - 1; i >= 0; i--) {
-        x[i] = B[i];
+        x[i] = b[i];
         for (j = i + 1; j < N; j++) x[i] -= A[i][j] * x[j];
     }
 }
