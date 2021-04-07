@@ -159,7 +159,46 @@ void svetilnikovdb::lab5()
  */
 void svetilnikovdb::lab6()
 {
-
+    for(int i = 0; i < N; i++){
+        for(int j = 0; j < N; j++)
+            if(A[i][j] != A[j][i]) return;
+    }
+    double *re = new double[N];
+    double *Ark = new double[N];
+    double t;
+    double xk;
+    for (int i = 0; i < N; i++) {
+        x[i] = 0;
+        re[i] = 0;
+        Ark[i] = 0;
+    }
+    bool exit = false;
+    while (exit == false) {
+        exit = true;
+        for (int i = 0; i < N; i++) {
+            re[i] = b[i];
+            for (int j = 0; j < N; j++) {
+                re[i] -= A[i][j] * x[j];
+            }
+        }
+        for (int i = 0; i < N; i++) {
+            Ark[i] = 0;
+            for (int j = 0; j < N; j++) {
+                Ark[i] += A[i][j] * re[j];
+            }
+        }
+        double t1 = 0, t2 = 0;
+        for (int i = 0; i < N; i++) {
+            t1 += Ark[i] * re[i];
+            t2 += Ark[i] * Ark[i];
+        }
+        t = t1 / t2;
+        for (int i = 0; i < N; i++) {
+            xk = x[i];
+            x[i] += t * re[i];
+            if (fabs(x[i] - xk) > 1E-9) exit = false;
+        }
+    }
 }
 
 
