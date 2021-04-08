@@ -136,7 +136,7 @@ void osipovda::lab5() {
     for (int i = 0; i < N; i++) x[i] = 1;
 
     while (flag) {
-        flag  = false;
+        flag = false;
         for (int i = 0; i < N; i++) {
             newX[i] = b[i];
             for (int j = 0; j < N; j++) {
@@ -158,7 +158,46 @@ void osipovda::lab5() {
  * Метод минимальных невязок
  */
 void osipovda::lab6() {
+    double *r = new double[N];
+    double *Ar = new double[N];
+    double eps = 1.e-9;
 
+    bool flag = true;
+    while (flag) {
+        flag = false;
+
+        for (int i = 0; i < N; i++) {
+            r[i] = b[i];
+            for (int j = 0; j < N; j++) {
+                r[i] -= A[i][j] * x[j];
+            }
+        }
+
+        for (int i = 0; i < N; i++) {
+            Ar[i] = 0;
+            for (int j = 0; j < N; j++) {
+                Ar[i] += A[i][j] * r[j];
+            }
+        }
+
+        double t = 0;
+        double Ar_scalar = 0;
+        for (int i = 0; i < N; i++) {
+            t += Ar[i] * r[i];
+            Ar_scalar += Ar[i] * Ar[i];
+        }
+
+        t /= Ar_scalar;
+        for (int i = 0; i < N; i++) {
+            double temp_x = x[i];
+            x[i] = x[i] + t * r[i];
+            if (fabs(x[i] - temp_x) > eps) {
+                flag = true;
+            }
+        }
+    }
+    delete[] r;
+    delete[] Ar;
 }
 
 
