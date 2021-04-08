@@ -114,7 +114,39 @@ void utkinnv::lab5() {
  * Метод минимальных невязок
  */
 void utkinnv::lab6() {
+    double *r = new double[N];
+    double *Ar = new double[N];
+    for (int i = 0; i < N; i++) x[i] = 0;
+    bool is_continue = true;
+    while (is_continue) {
+        is_continue = false;
 
+        for (int i = 0; i < N; i++) r[i] = -b[i];
+
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < N; j++)
+                r[i] += A[i][j] * x[j];
+
+        for (int i = 0; i < N; i++) {
+            Ar[i] = 0;
+            for (int j = 0; j < N; j++) Ar[i] += A[i][j] * r[j];
+        }
+
+        double t = 0;
+        double Ar2 = 0;
+        for (int i = 0; i < N; i++) {
+            t += Ar[i] * r[i];
+            Ar2 += Ar[i] * Ar[i];
+        }
+        t /= Ar2;
+        for (int i = 0; i < N; i++) {
+            double temp_x = x[i];
+            x[i] = x[i] - t * r[i];
+            if (fabs(x[i] - temp_x) > 1e-9) is_continue = true;
+        }
+    }
+    delete[] r;
+    delete[] Ar;
 }
 
 
