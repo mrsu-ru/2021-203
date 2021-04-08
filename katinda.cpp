@@ -136,7 +136,26 @@ void katinda::lab4()
  */
 void katinda::lab5()
 {
-
+    double eps = 1e-9;
+    for(int i = 0; i < N; i++){
+        x[i] = b[i];
+    }
+    bool exit = false;
+    while(!exit){
+        exit = true;
+        for(int i = 0; i < N; i++){
+            double tmpx = b[i];
+            for(int j = 0; j < N; j++){
+                if(i == j)
+                    continue;
+                tmpx -= A[i][j] * x[j];
+            }
+            tmpx /= A[i][i];
+            if(abs(x[i] - tmpx) > eps)
+                exit = false;
+            x[i] = tmpx;
+        }
+    }
 }
 
 
