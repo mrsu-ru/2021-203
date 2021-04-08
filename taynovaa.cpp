@@ -93,6 +93,7 @@ void taynovaa::lab4() {
             S[i][j] = (A[i][j] - s) / (S[i][i] * D[i]);
         }
     }
+
 //    StD y = b
     double *y = new double[N];
     for (int i = 0; i < N; i++) {
@@ -107,14 +108,28 @@ void taynovaa::lab4() {
     }
 }
 
-
 /**
  * Метод Якоби или Зейделя
  */
-void taynovaa::lab5() {
 
+void taynovaa::lab5(){
+    double eps = 1e-18;
+    for (int i = 0; i < N; i++) x[i] = 0;
+    bool notOk = 1;
+    while (notOk) {
+        notOk = 0;
+        for (int i = 0; i < N; i++) {
+            double tmp = b[i];
+            for (int j = 0; j < N; j++) {
+                if (i == j) continue;
+                tmp -= A[i][j] * x[j];
+            }
+            tmp /= A[i][i];
+            if (abs(tmp - x[i]) > eps) notOk = 1;
+            x[i] = tmp;
+        }
+    }
 }
-
 
 /**
  * Метод минимальных невязок
