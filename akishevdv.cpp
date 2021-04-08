@@ -232,6 +232,52 @@ void akishevdv::lab5()
  */
 void akishevdv::lab6()
 {
+    double* functionality = new double[N];
+    double* residual_vector = new double[N];
+
+    double in_num, difference,
+        tmp, tmp_two, help_one, help_two;
+
+    while(1){
+        for (int i = 0; i < N; i++) {
+            tmp = 0;
+            for (int j = 0; j < N; j++) {
+                tmp += A[i][j] * x[j];
+            }
+            residual_vector[i] = tmp - b[i];
+            functionality[i] = 2 * residual_vector[i];
+        }
+        double* array = new double[N];
+        for (int i = 0; i < N; i++) {
+            tmp_two = 0;
+            for (int j = 0; j < N; j++) {
+                tmp_two += A[i][j] * residual_vector[j];
+            }
+            array[i] = tmp_two;
+        }
+
+        help_one = 0;
+        help_two = 0;
+        for (int i = 0; i < N; i++) {
+            help_one += abs(array[i] * residual_vector[i]);
+            help_two += abs(array[i] * array[i]);
+        }
+        in_num = help_one / (2 * help_two);
+
+        double*y = new double[N];
+        for (int i = 0; i < N; i++) {
+            y[i] = x[i];
+        }
+        for (int i = 0; i < N; i++) {
+            x[i] = x[i] - in_num * functionality[i];
+        }
+
+        difference = 0;
+        for (int i = 0; i < N; i++) {
+            difference += (y[i] - x[i]) * (y[i] - x[i]);
+        }
+        if(!(sqrt(difference) > 1e-19)) break;
+    }
 
 }
 
