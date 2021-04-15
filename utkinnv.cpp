@@ -154,7 +154,64 @@ void utkinnv::lab6() {
  * Метод сопряженных градиентов
  */
 void utkinnv::lab7() {
+    double *r = new double[N];
+    double *Ar = new double[N];
+    double *prev_x = new double[N];
+    double t, a = 1, scalar_r = 0, scalar_Ar = 0;
+    bool is_continue = true;
+    for (int i = 0; i < N; i++) {
+        x[i] = 0;
+        r[i] = -b[i];
+    }
 
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < N; j++)
+            r[i] += A[i][j] * x[j];
+
+    for (int i = 0; i < N; i++) {
+        Ar[i] = 0;
+        for (int j = 0; j < N; j++) Ar[i] += A[i][j] * r[j];
+    }
+    for (int i = 0; i < N; i++) {
+        scalar_r += r[i] * r[i];
+        scalar_Ar += Ar[i] * r[i];
+    }
+    t = scalar_r / scalar_Ar;
+    for (int i = 0; i < N; i++) {
+        x[i] = t * b[i];
+    }
+    while (is_continue) {
+        is_continue = false;
+
+        for (int i = 0; i < N; i++) r[i] = -b[i];
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < N; j++)
+                r[i] += A[i][j] * x[j];
+
+        for (int i = 0; i < N; i++) {
+            Ar[i] = 0;
+            for (int j = 0; j < N; j++) Ar[i] += A[i][j] * r[j];
+        }
+
+        double temp_t = t, temp_scalar = scalar_Ar;
+        scalar_r = 0;
+        scalar_Ar = 0;
+        for (int i = 0; i < N; i++) {
+            scalar_r += r[i] * r[i];
+            scalar_Ar += Ar[i] * r[i];
+        }
+        t = scalar_r / scalar_Ar;
+        a = 1.0 / (1 - (t * scalar_r) / (a * temp_t * temp_scalar));
+        for (int i = 0; i < N; i++) {
+            double temp_x = x[i];
+            x[i] = a * x[i] + (1 - a) * prev_x[i] - t * a * r[i];
+            prev_x[i] = temp_x;
+            if (fabs(x[i] - temp_x) > 1e-9) is_continue = true;
+        }
+    }
+    delete[] r;
+    delete[] Ar;
+    delete[] prev_x;
 }
 
 
