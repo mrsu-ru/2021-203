@@ -314,9 +314,6 @@ void osipovda::lab7() {
             for  (int j = 0; j < N; j++) {
                 Ex[i] += E[i][j] * x[j];
             }
-        }
-
-        for (int i = 0; i < N; i++) {
             Ex[i] *= alpha;
         }
 
