@@ -205,7 +205,137 @@ void osipovda::lab6() {
  * Метод сопряженных градиентов
  */
 void osipovda::lab7() {
+    double *r = new double[N];
+    double *Ar = new double[N];
+    double r_scalar_old, r_scalar = 0;
+    double t, t_old;
+    double alpha_old, alpha = 1;
+    double eps = 1.e-18;
+    double Ar_scalar = 0;
 
+    r_scalar = 0;
+    for (int i = 0; i < N; i++) {
+        r[i] = b[i];
+        for (int j = 0; j < N; j++) {
+            r[i] -= A[i][j] * x[j];
+        }
+        r_scalar += r[i] * r[i];
+    }
+
+    Ar_scalar = 0;
+    for (int i = 0; i < N; i++) {
+        Ar[i] = 0;
+        for (int j = 0; j < N; j++) {
+            Ar[i] += A[i][j] * r[j];
+        }
+        Ar_scalar += Ar[i] * r[i];
+    }
+    t = r_scalar / Ar_scalar;
+
+    double **E = new double *[N];
+    for (int i = 0; i < N; i++) {
+        E[i] = new double[N];
+        for (int j = 0; j < N; j++) {
+            if (i == j) E[i][j] = 1;
+            else E[i][j] = 0;
+        }
+    }
+    for (int i = 0; i < N; i++) {
+        for  (int j = 0; j < N; j++) {
+            E[i][j] -= t * A[i][j];
+        }
+    }
+
+    double *tb = new double[N];
+    for (int i = 0; i < N; i++) {
+        tb[i] = t * b[i];
+    }
+
+    double *Ex = new double[N];
+    for (int i = 0; i < N; i++) {
+        Ex[i] = 0;
+        for  (int j = 0; j < N; j++) {
+            Ex[i] += E[i][j] * x[j];
+        }
+    }
+
+    for (int i = 0; i < N; i++) {
+        x[i] = Ex[i] + tb[i];
+    }
+
+    bool flag = true;
+    r_scalar_old = r_scalar;
+    alpha_old = alpha;
+    t_old = t;
+    while (flag) {
+        flag = false;
+
+        r_scalar = 0;
+        for (int i = 0; i < N; i++) {
+            r[i] = b[i];
+            for (int j = 0; j < N; j++) {
+                r[i] -= A[i][j] * x[j];
+            }
+            r_scalar += r[i] * r[i];
+        }
+
+        Ar_scalar = 0;
+        for (int i = 0; i < N; i++) {
+            Ar[i] = 0;
+            for (int j = 0; j < N; j++) {
+                Ar[i] += A[i][j] * r[j];
+            }
+            Ar_scalar += Ar[i] * r[i];
+        }
+        t = r_scalar / Ar_scalar;
+
+        alpha = 1 - 1./alpha_old * t / t_old * r_scalar / r_scalar_old;
+        alpha = 1. / alpha;
+
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (i == j) E[i][i] = 1;
+                else E[i][j] = 0;
+            }
+        }
+
+        for (int i = 0; i < N; i++) {
+            for  (int j = 0; j < N; j++) {
+                E[i][j] -= t * A[i][j];
+            }
+        }
+
+        double *tb = new double[N];
+        for (int i = 0; i < N; i++) {
+            tb[i] = alpha * t * b[i];
+        }
+
+        double *Ex = new double[N];
+        for (int i = 0; i < N; i++) {
+            Ex[i] = 0;
+            for  (int j = 0; j < N; j++) {
+                Ex[i] += E[i][j] * x[j];
+            }
+        }
+
+        for (int i = 0; i < N; i++) {
+            Ex[i] *= alpha;
+        }
+
+        for (int i = 0; i < N; i++) {
+            double temp_x = x[i];
+            x[i] = Ex[i] + (1 - alpha) * x[i] + tb[i];
+            if (fabs(x[i] - temp_x) > eps) {
+                flag = true;
+            }
+        }
+
+        r_scalar_old = r_scalar;
+        alpha_old = alpha;
+        t_old = t;
+    }
+    delete[] r;
+    delete[] Ar;
 }
 
 
