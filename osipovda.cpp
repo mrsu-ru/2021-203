@@ -305,20 +305,15 @@ void osipovda::lab7() {
             }
         }
 
-        double *tb = new double[N];
         for (int i = 0; i < N; i++) {
             tb[i] = alpha * t * b[i];
         }
 
-        double *Ex = new double[N];
         for (int i = 0; i < N; i++) {
             Ex[i] = 0;
             for  (int j = 0; j < N; j++) {
                 Ex[i] += E[i][j] * x[j];
             }
-        }
-
-        for (int i = 0; i < N; i++) {
             Ex[i] *= alpha;
         }
 
