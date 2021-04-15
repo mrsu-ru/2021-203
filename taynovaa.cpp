@@ -112,7 +112,7 @@ void taynovaa::lab4() {
  * Метод Якоби или Зейделя
  */
 
-void taynovaa::lab5(){
+void taynovaa::lab5() {
     double eps = 1e-18;
     for (int i = 0; i < N; i++) x[i] = 0;
     bool notOk = 1;
@@ -134,7 +134,34 @@ void taynovaa::lab5(){
 /**
  * Метод минимальных невязок
  */
+double SP(double *a, double *b, int N) {
+    double t = 0;
+    for (int i = 0; i < N; i++) {
+        t += a[i] * b[i];
+    }
+    return t;
+}
+
 void taynovaa::lab6() {
+    double *r = new double[N];
+    double *Ar = new double[N];
+    bool go = 1;
+
+    for (int i = 0; i < N; i++) x[i] = 0;
+    while (go) {
+        go = 0;
+        for (int i = 0; i < N; i++) r[i] = b[i] - SP(A[i], x, N);
+
+        for (int i = 0; i < N; i++) Ar[i] = SP(A[i], r, N);
+
+        double t = SP(Ar, r, N) / SP(Ar, Ar, N);
+
+        for (int i = 0; i < N; i++) {
+            double prev_x = x[i];
+            x[i] += t * r[i];
+            if (fabs(prev_x - x[i]) > 1e-18) go = 1;
+        }
+    }
 
 }
 
