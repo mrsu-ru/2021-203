@@ -206,7 +206,8 @@ void svetilnikovdb::lab6()
 /**
  * Метод сопряженных градиентов
  */
-void svetilnikovdb::lab7() {
+void svetilnikovdb::lab7()
+{
     double *re = new double[N];
     double *Ark = new double[N];
     double *xk = new double[N];
