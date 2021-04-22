@@ -335,7 +335,7 @@ void osipovda::lab7() {
 
 
 void osipovda::lab8() {
-    double eps = 1e-9;
+    double eps = 1;
     double err = 0;
     for (int i = 0; i < N; i++)
         for (int j = i + 1; j < N; j++)
@@ -346,7 +346,6 @@ void osipovda::lab8() {
         C[i] = new double[N];
 
     while (err > eps) {
-        cout << err << "\n";
         int i = 0, j = 1;
         double mx = fabs(A[0][1]);
         for (int ii = 0; ii < N; ii++) {
