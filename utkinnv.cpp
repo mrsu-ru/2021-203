@@ -217,15 +217,16 @@ void utkinnv::lab7() {
 
 void utkinnv::lab8() {
     double **b = new double *[N];
-    double t, eps = 0.1;
+    double t, eps = 1;
     for (int i = 0; i < N; ++i) {
         b[i] = new double[N];
     }
     do {
-        double phi = 0, max_el = -1e18;
+        double max_el = 1e-18;
         int max_i, max_j;
         for (int i = 0; i < N; ++i) {
             for (int j = 0; j < N; ++j) {
+                if (i == j) continue;
                 if (fabs(A[i][j]) > max_el) {
                     max_el = fabs(A[i][j]);
                     max_i = i;
@@ -233,7 +234,7 @@ void utkinnv::lab8() {
                 }
             }
         }
-        phi = atan(2 * A[max_i][max_j] / (A[max_j][max_j] - A[max_i][max_i])) / 2;
+        double phi = atan(2 * A[max_i][max_j] / (A[max_j][max_j] - A[max_i][max_i])) / 2;
         double s = sin(phi), c = cos(phi);
         for (int i = 0; i < N; ++i)
             for (int j = 0; j < N; ++j)
@@ -252,10 +253,9 @@ void utkinnv::lab8() {
         for (int i = 0; i < N; ++i)
             for (int j = i + 1; j < N; ++j)
                 t += A[i][j] * A[i][j] + A[j][i] * A[j][i];
-    } while (t <= eps);
+    } while (t > eps);
     for (int i = 0; i < N; ++i) {
         x[i] = A[i][i];
-
         delete[] b[i];
     }
     delete[] b;
