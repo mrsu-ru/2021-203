@@ -335,7 +335,7 @@ void osipovda::lab7() {
 
 
 void osipovda::lab8() {
-    double eps = 1;
+    double eps = 0.1;
     double err = 0;
     for (int i = 0; i < N; i++)
         for (int j = i + 1; j < N; j++)
@@ -383,7 +383,7 @@ void osipovda::lab8() {
     }
 
     for (int i = 0; i < N; i++) {
-        x[i] = b[i] / A[i][i];
+        x[i] = A[i][i];
     }
 
     for (int i = 0; i < N; i++) {
