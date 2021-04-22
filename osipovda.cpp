@@ -241,7 +241,7 @@ void osipovda::lab7() {
         }
     }
     for (int i = 0; i < N; i++) {
-        for  (int j = 0; j < N; j++) {
+        for (int j = 0; j < N; j++) {
             E[i][j] -= t * A[i][j];
         }
     }
@@ -254,7 +254,7 @@ void osipovda::lab7() {
     double *Ex = new double[N];
     for (int i = 0; i < N; i++) {
         Ex[i] = 0;
-        for  (int j = 0; j < N; j++) {
+        for (int j = 0; j < N; j++) {
             Ex[i] += E[i][j] * x[j];
         }
     }
@@ -289,7 +289,7 @@ void osipovda::lab7() {
         }
         t = r_scalar / Ar_scalar;
 
-        alpha = 1 - 1./alpha_old * t / t_old * r_scalar / r_scalar_old;
+        alpha = 1 - 1. / alpha_old * t / t_old * r_scalar / r_scalar_old;
         alpha = 1. / alpha;
 
         for (int i = 0; i < N; i++) {
@@ -300,7 +300,7 @@ void osipovda::lab7() {
         }
 
         for (int i = 0; i < N; i++) {
-            for  (int j = 0; j < N; j++) {
+            for (int j = 0; j < N; j++) {
                 E[i][j] -= t * A[i][j];
             }
         }
@@ -311,7 +311,7 @@ void osipovda::lab7() {
 
         for (int i = 0; i < N; i++) {
             Ex[i] = 0;
-            for  (int j = 0; j < N; j++) {
+            for (int j = 0; j < N; j++) {
                 Ex[i] += E[i][j] * x[j];
             }
             Ex[i] *= alpha;
@@ -335,7 +335,61 @@ void osipovda::lab7() {
 
 
 void osipovda::lab8() {
+    double eps = 1;
+    double err = 0;
+    for (int i = 0; i < N; i++)
+        for (int j = i + 1; j < N; j++)
+            err += A[i][j] * A[i][j] + A[j][i] * A[j][i];
 
+    double **C = new double *[N];
+    for (int i = 0; i < N; i++)
+        C[i] = new double[N];
+
+    while (err > eps) {
+        int i = 0, j = 1;
+        double mx = fabs(A[0][1]);
+        for (int ii = 0; ii < N; ii++) {
+            for (int jj = 0; jj < N; jj++) {
+                if (ii == jj) continue;
+                if (fabs(A[ii][jj]) > mx) {
+                    mx = fabs(A[ii][jj]);
+                    i = ii, j = jj;
+                }
+            }
+        }
+
+        double phi = atan(2 * A[i][j] / (A[j][j] - A[i][i])) / 2;
+        double sn = sin(phi), cs = cos(phi);
+
+        for (int ii = 0; ii < N; ii++) {
+            for (int jj = 0; jj < N; jj++) {
+                C[ii][jj] = A[ii][jj];
+            }
+        }
+        for (int r = 0; r < N; r++) {
+            C[r][i] = A[r][i] * cs - A[r][j] * sn;
+            C[r][j] = A[r][i] * sn + A[r][j] * cs;
+        }
+        for (int c = 0; c < N; c++) {
+            A[i][c] = C[i][c] * cs - C[j][c] * sn;
+            A[j][c] = C[i][c] * sn + C[j][c] * cs;
+        }
+        A[i][j] = 0;
+
+        err = 0;
+        for (int ii = 0; ii < N; ii++)
+            for (int jj = ii + 1; jj < N; jj++)
+                err += A[ii][jj] * A[ii][jj] + A[jj][ii] * A[jj][ii];
+    }
+
+    for (int i = 0; i < N; i++) {
+        x[i] = b[i] / A[i][i];
+    }
+
+    for (int i = 0; i < N; i++) {
+        delete[] C[i];
+    }
+    delete[] C;
 }
 
 
