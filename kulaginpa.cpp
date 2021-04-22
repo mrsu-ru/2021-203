@@ -156,9 +156,9 @@ void kulaginpa::lab4()
 		x[i] = b[i] / S[i][i];
 	}
 
-	delete S[0];
-	delete S;
-	delete D;
+	delete[] S[0];
+	delete[] S;
+	delete[] D;
 }
 
 
@@ -168,7 +168,37 @@ void kulaginpa::lab4()
  */
 void kulaginpa::lab5()
 {
+	size_t n = N;
+	double eps = 1.E-10;
+	for (size_t i = 0; i < n; i++)
+		x[i] = A[i][i];
 
+	bool stop = false;
+	double *next_x_arr = new double[N];
+
+	while (!stop)
+	{
+		for (size_t i = 0; i < n; i++)
+		{
+			double temp_x = b[i];
+			for (size_t j = 0; j < n; j++)
+			{
+				if (i == j) 
+					continue;
+				temp_x -= x[j] * A[i][j];
+			}
+			next_x_arr[i] = temp_x / A[i][i];
+		}
+		stop = true;
+		for (size_t i = 0; i < n; i++)
+		{
+			if (abs(x[i] - next_x_arr[i]) > eps)
+				stop = false;
+			x[i] = next_x_arr[i];
+		}
+	}
+
+	delete[] next_x_arr;
 }
 
 
