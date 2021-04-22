@@ -383,7 +383,7 @@ void osipovda::lab8() {
     }
 
     for (int i = 0; i < N; i++) {
-        x[i] = b[i] / A[i][i];
+        x[i] =  A[i][i];
     }
 
     for (int i = 0; i < N; i++) {
