@@ -394,7 +394,45 @@ void osipovda::lab8() {
 
 
 void osipovda::lab9() {
+    double eps = 1e-3;
+    double *y = new double[N];
+    double *yPred = new double[N];
 
+    for (int i = 0; i < N; i++) {
+        yPred[i] = 1;
+    }
+
+    double delta = 1e9;
+    double maxLambda = 0;
+
+    while (delta > eps) {
+        for (int i = 0; i < N; i++) {
+            y[i] = 0;
+            for (int j = 0; j < N; j++) {
+                y[i] += A[i][j] * yPred[j];
+            }
+        }
+
+        double lambda = 0;
+        for (int i = 0; i < N; i++) {
+            if (fabs(y[i]) > eps && fabs(yPred[i]) > eps) {
+                lambda = y[i] / yPred[i];
+                break;
+            }
+        }
+
+        delta = fabs(lambda - maxLambda);
+        maxLambda = lambda;
+
+        for (int i = 0; i < N; i++) {
+            yPred[i] = y[i];
+        }
+    }
+
+    cout << "maxLambda = " << maxLambda << endl;
+
+    delete[] y;
+    delete[] yPred;
 }
 
 
