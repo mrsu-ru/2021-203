@@ -165,7 +165,42 @@ void katinda::lab5()
  */
 void katinda::lab6()
 {
-
+    double eps = 1e-9;
+    double *r = new double[N];
+    double *Ar = new double[N];
+    bool exit = false;
+    for (int i = 0; i < N; i++) x[i] = 0;
+    while(!exit){
+        exit = true;
+        for(int i = 0; i < N; i++){
+            r[i] = b[i];
+            for(int j = 0; j < N; j++){
+                r[i] -= A[i][j] * x[j];
+            }
+        }
+        for(int i = 0; i < N; i++){
+            Ar[i] = 0;
+            for(int j = 0; j < N; j++){
+                Ar[i] += A[i][j] * r[j];
+            }
+        }
+        double rr = 0;
+        for(int i = 0; i < N; i++){
+            rr += r[i] * r[i];
+        }
+        double Arr = 0;
+        for(int i = 0; i < N; i++){
+            Arr += Ar[i] * r[i];
+        }
+        double tau = rr / Arr;
+        for(int i = 0; i < N; i++) {
+            double tmpx = x[i];
+            x[i] += tau * r[i];
+            if(abs(tmpx - x[i]) > eps){
+                exit = false;
+            }
+        }
+    }
 }
 
 
@@ -173,9 +208,64 @@ void katinda::lab6()
 /**
  * Метод сопряженных градиентов
  */
-void katinda::lab7()
-{
-
+void katinda::lab7() {
+    double eps = 1e-10;
+    double *r = new double[N];
+    double *Ar = new double[N];
+    double *prev_x = new double[N];
+    bool exit = false;
+    bool first = true;
+    double alpha = 1;
+    double tau, prev_rr, prev_tau;
+    for (int i = 0; i < N; i++) {
+        x[i] = 0;
+        prev_x[i] = 0;
+    }
+    while (!exit) {
+        exit = true;
+        for (int i = 0; i < N; i++) {
+            r[i] = b[i];
+            for (int j = 0; j < N; j++) {
+                r[i] -= A[i][j] * x[j];
+            }
+        }
+        for (int i = 0; i < N; i++) {
+            Ar[i] = 0;
+            for (int j = 0; j < N; j++) {
+                Ar[i] += A[i][j] * r[j];
+            }
+        }
+        double rr = 0;
+        for (int i = 0; i < N; i++) {
+            rr += r[i] * r[i];
+        }
+        double Arr = 0;
+        for (int i = 0; i < N; i++) {
+            Arr += Ar[i] * r[i];
+        }
+        tau = rr / Arr;
+        if (first) {
+            for (int i = 0; i < N; i++) {
+                x[i] = tau * b[i];
+            }
+            first = false;
+            prev_rr = rr;
+            prev_tau = tau;
+            exit = false;
+            continue;
+        }
+        alpha = 1 / (1 - (tau * rr) / (alpha * prev_tau * prev_rr));
+        for (int i = 0; i < N; i++) {
+            double tmpx = x[i];
+            x[i] = alpha * x[i] + (1 - alpha) * prev_x[i] - tau * alpha * r[i];
+            prev_x[i] = tmpx;
+            if (abs(tmpx - x[i]) > eps) {
+                exit = false;
+            }
+        }
+        prev_rr = rr;
+        prev_tau = tau;
+    }
 }
 
 
