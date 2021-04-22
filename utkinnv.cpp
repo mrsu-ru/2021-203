@@ -216,12 +216,73 @@ void utkinnv::lab7() {
 
 
 void utkinnv::lab8() {
+    double **b = new double *[N];
+    double t, eps = 0.1;
+    for (int i = 0; i < N; ++i) {
+        b[i] = new double[N];
+    }
+    do {
+        double phi = 0, max_el = -1e18;
+        int max_i, max_j;
+        for (int i = 0; i < N; ++i) {
+            for (int j = 0; j < N; ++j) {
+                if (fabs(A[i][j]) > max_el) {
+                    max_el = fabs(A[i][j]);
+                    max_i = i;
+                    max_j = j;
+                }
+            }
+        }
+        phi = atan(2 * A[max_i][max_j] / (A[max_j][max_j] - A[max_i][max_i])) / 2;
+        double s = sin(phi), c = cos(phi);
+        for (int i = 0; i < N; ++i)
+            for (int j = 0; j < N; ++j)
+                b[i][j] = A[i][j];
 
+        for (int r = 0; r < N; ++r) {
+            b[r][max_i] = A[r][max_i] * c - A[r][max_j] * s;
+            b[r][max_j] = A[r][max_i] * s + A[r][max_j] * c;
+        }
+        for (int l = 0; l < N; ++l) {
+            A[max_i][l] = b[max_i][l] * c - b[max_j][l] * s;
+            A[max_j][l] = b[max_i][l] * s + b[max_j][l] * c;
+        }
+        A[max_i][max_j] = 0;
+        t = 0;
+        for (int i = 0; i < N; ++i)
+            for (int j = i + 1; j < N; ++j)
+                t += A[i][j] * A[i][j] + A[j][i] * A[j][i];
+    } while (t <= eps);
+    for (int i = 0; i < N; ++i) {
+        x[i] = A[i][i];
+
+        delete[] b[i];
+    }
+    delete[] b;
 }
 
 
 void utkinnv::lab9() {
-
+    double eps = 1e-2, l, l_prev;
+    double *y = new double[N];
+    double *y_prev = new double[N];
+    for (int i = 0; i < N; ++i) y_prev[i] = 42;
+    do {
+        l_prev = l;
+        for (int i = 0; i < N; ++i) {
+            y[i] = 0;
+            for (int j = 0; j < N; ++j) {
+                y[i] += A[i][j] * y_prev[j];
+            }
+        }
+        l = (fabs(y[0]) > eps && fabs(y_prev[0]) > eps) ? y[0] / y_prev[0] : 0;
+        for (int i = 0; i < N; ++i) {
+            y_prev[i] = y[i];
+        }
+    } while (fabs(l - l_prev) > eps);
+    cout << "max lambda = " << l << endl;
+    delete[] y;
+    delete[] y_prev;
 }
 
 
