@@ -475,7 +475,59 @@ void akishevdv::lab8()
 
 void akishevdv::lab9()
 {
+    double *y_one_array = new double[N]; //start vector
+    double *y_two_array = new double[N]; //vector of values
+    double Ans_lambda = 0;
 
+    for (int i = 0; i < N; i++)
+    {
+        y_one_array[i] = 1;
+        y_two_array[i] = 0;
+    }
+
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < N; j++)
+            y_two_array[i] += A[i][j] * y_one_array[j];
+
+    double y_one = y_one_array[0];
+    double y_two;
+    for (int i = 0; i < N; i++)
+        if (y_two_array[i] != 0)
+        {
+            y_two = y_two_array[i];
+            break;
+        }
+
+    double lambda_max = y_two / y_one;
+    double delta_lambda = lambda_max;
+
+    while (delta_lambda > 1e-3)
+    {
+        for (int i = 0; i < N; i++)
+        {
+            y_one_array[i] = y_two_array[i];
+            y_two_array[i] = 0;
+        }
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < N; j++)
+                y_two_array[i] += A[i][j] * y_one_array[j];
+
+        for (int i = 0; i < N; i++)
+            if ((y_two_array[i] != 0) && (y_one_array[i] != 0))
+            {
+                y_one = y_one_array[i];
+                y_two = y_two_array[i];
+                break;
+            }
+
+        Ans_lambda = y_two / y_one;
+        delta_lambda = fabs(Ans_lambda - lambda_max);
+        lambda_max = Ans_lambda;
+    }
+    cout << "\n" << "Ans: " << Ans_lambda << "\n";
+
+    delete[] y_one_array;
+    delete[] y_two_array;
 }
 
 
