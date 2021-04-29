@@ -288,7 +288,108 @@ void akishevdv::lab6()
  */
 void akishevdv::lab7()
 {
+    double* residual_vector = new double[N];
 
+    double norma;
+    for(int i = 0; i < N; i++)
+        norma += b[i] * b[i];
+
+    double* r = new double[N];
+    for (int i = 0; i < N; i++){
+        double tmp = 0;
+        for(int j = 0; j < N; j++){
+            tmp += A[i][j] * x[j];
+        }
+        residual_vector[i] = b[i] - tmp;
+        r[i] = residual_vector[i];
+    }
+
+    double* Ar = new double[N];
+    for (int i = 0; i < N; i++){
+        double tmp = 0;
+        for(int j = 0; j < N; j++){
+            tmp += A[i][j] * r[j];
+        }
+        Ar[i] = tmp;
+    }
+
+    double t1 = 0, t2 = 0;
+    for (int i = 0; i < N; i++){
+        t1 += residual_vector[i] * residual_vector[i];
+        t2 += Ar[i] * r[i];
+    }
+    double alf = t1 / t2;
+
+    double* residual_vector_help = new double[N];
+    for(int i=0; i < N; i++){
+        residual_vector_help[i] = residual_vector[i];
+    }
+
+    for(int i=0; i < N; i++){
+        x[i] = x[i] + alf * r[i];
+        residual_vector[i] = residual_vector[i] - alf * Ar[i];
+    }
+
+    for (int i = 0; i < N; i++){
+        t1 += residual_vector[i] * residual_vector[i];
+        t2 += residual_vector_help[i] * residual_vector_help[i];
+    }
+    double bet = t1 / t2;
+
+    for(int i = 0; i < N; i++){
+        r[i] = residual_vector[i] + bet * r[i];
+    }
+
+    double tr = 0;
+    for(int i = 0; i < N; i++){
+        tr += residual_vector[i] * residual_vector[i];
+    }
+
+    while(1){
+        for (int i = 0; i < N; i++){
+            double tmp = 0;
+            for(int j = 0; j < N; j++){
+                tmp += A[i][j] * r[j];
+            }
+            Ar[i] = tmp;
+        }
+
+        double ts1 = 0, ts2 = 0;
+        for (int i = 0; i < N; i++){
+            ts1 += residual_vector[i] * residual_vector[i];
+            ts2 += Ar[i] * r[i];
+        }
+        alf = ts1/ts2;
+
+        for(int i=0; i < N; i++){
+            residual_vector_help[i] = residual_vector[i];
+        }
+
+        for(int i = 0; i < N; i++){
+            x[i] = x[i] + alf * r[i];
+            residual_vector[i] = residual_vector[i] - alf * Ar[i];
+        }
+
+        for (int i = 0; i < N; i++){
+            ts1 += residual_vector[i] * residual_vector[i];
+            ts2 += residual_vector_help[i] * residual_vector_help[i];
+        }
+        bet = ts1/ts2;
+
+        for(int i = 0; i < N; i++){
+            r[i] = residual_vector[i] + bet * r[i];
+        }
+        double tr = 0;
+        for(int i = 0; i < N; i++){
+            tr += residual_vector[i] * residual_vector[i];
+        }
+        if(!(sqrt(tr / norma) > 1e-21)) break;
+    }
+
+    delete[] residual_vector;
+    delete[] residual_vector_help;
+    delete[] Ar;
+    delete[] r;
 }
 
 
