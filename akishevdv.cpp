@@ -288,13 +288,189 @@ void akishevdv::lab6()
  */
 void akishevdv::lab7()
 {
+    double* residual_vector = new double[N];
 
+    double norma;
+    for(int i = 0; i < N; i++)
+        norma += b[i] * b[i];
+
+    double* r = new double[N];
+    for (int i = 0; i < N; i++){
+        double tmp = 0;
+        for(int j = 0; j < N; j++){
+            tmp += A[i][j] * x[j];
+        }
+        residual_vector[i] = b[i] - tmp;
+        r[i] = residual_vector[i];
+    }
+
+    double* Ar = new double[N];
+    for (int i = 0; i < N; i++){
+        double tmp = 0;
+        for(int j = 0; j < N; j++){
+            tmp += A[i][j] * r[j];
+        }
+        Ar[i] = tmp;
+    }
+
+    double t1 = 0, t2 = 0;
+    for (int i = 0; i < N; i++){
+        t1 += residual_vector[i] * residual_vector[i];
+        t2 += Ar[i] * r[i];
+    }
+    double alf = t1 / t2;
+
+    double* residual_vector_help = new double[N];
+    for(int i=0; i < N; i++){
+        residual_vector_help[i] = residual_vector[i];
+    }
+
+    for(int i=0; i < N; i++){
+        x[i] = x[i] + alf * r[i];
+        residual_vector[i] = residual_vector[i] - alf * Ar[i];
+    }
+
+    for (int i = 0; i < N; i++){
+        t1 += residual_vector[i] * residual_vector[i];
+        t2 += residual_vector_help[i] * residual_vector_help[i];
+    }
+    double bet = t1 / t2;
+
+    for(int i = 0; i < N; i++){
+        r[i] = residual_vector[i] + bet * r[i];
+    }
+
+    double tr = 0;
+    for(int i = 0; i < N; i++){
+        tr += residual_vector[i] * residual_vector[i];
+    }
+
+    while(1){
+        for (int i = 0; i < N; i++){
+            double tmp = 0;
+            for(int j = 0; j < N; j++){
+                tmp += A[i][j] * r[j];
+            }
+            Ar[i] = tmp;
+        }
+
+        double ts1 = 0, ts2 = 0;
+        for (int i = 0; i < N; i++){
+            ts1 += residual_vector[i] * residual_vector[i];
+            ts2 += Ar[i] * r[i];
+        }
+        alf = ts1/ts2;
+
+        for(int i=0; i < N; i++){
+            residual_vector_help[i] = residual_vector[i];
+        }
+
+        for(int i = 0; i < N; i++){
+            x[i] = x[i] + alf * r[i];
+            residual_vector[i] = residual_vector[i] - alf * Ar[i];
+        }
+
+        for (int i = 0; i < N; i++){
+            ts1 += residual_vector[i] * residual_vector[i];
+            ts2 += residual_vector_help[i] * residual_vector_help[i];
+        }
+        bet = ts1/ts2;
+
+        for(int i = 0; i < N; i++){
+            r[i] = residual_vector[i] + bet * r[i];
+        }
+        double tr = 0;
+        for(int i = 0; i < N; i++){
+            tr += residual_vector[i] * residual_vector[i];
+        }
+        if(!(sqrt(tr / norma) > 1e-21)) break;
+    }
+
+    delete[] residual_vector;
+    delete[] residual_vector_help;
+    delete[] Ar;
+    delete[] r;
 }
+
 
 
 void akishevdv::lab8()
 {
+    double error = 0;
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < N; j++)
+            if (i != j)
+                error += A[i][j] * A[i][j];
 
+    int ii = 0;
+    int jj = 1;
+    double max_elem = A[0][1];
+    while (sqrt(error) > 1)
+    {
+        for (int i = 0; i < N; i++)
+            for (int j = i + 1; j < N; j++)
+                if (abs(A[i][j]) >= abs(max_elem))
+                {
+                    max_elem = A[i][j];
+                    ii = i;
+                    jj = j;
+                }
+
+        double alpha;
+        if (A[ii][ii] == A[jj][jj])
+            alpha = M_PI / 4;
+        else alpha = atan((2 * A[ii][jj]) / (A[jj][jj] - A[ii][ii])) / 2;
+
+        double c = cos(alpha);
+        double s = sin(alpha);
+
+        double **C = new double*[N];
+        for (int i = 0; i < N; i++)
+            C[i] = new double[N];
+
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < N; j++)
+                C[i][j] = 0;
+
+        C[ii][ii] = pow(c, 2) * A[ii][ii] - 2*s*c * A[ii][jj] + pow(s, 2) * A[jj][jj];
+        C[jj][jj] = pow(s, 2) * A[ii][ii] + 2*s*c * A[ii][jj] + pow(c, 2) * A[jj][jj];
+        C[ii][jj] = (pow(c, 2) - pow(s, 2)) * A[ii][jj] + s * c * (A[ii][ii] - A[jj][jj]);
+        C[jj][ii] = C[ii][jj];
+        for (int k = 0; k < N; k++)
+            if (k != ii && k != jj)
+            {
+                C[ii][k] = c * A[ii][k] - s * A[jj][k];
+                C[k][ii] = C[ii][k];
+            }
+
+        for (int k = 0; k < N; k++)
+            if (k != ii && k != jj)
+            {
+                C[jj][k] = s * A[ii][k] + c * A[jj][k];
+                C[k][jj] = C[jj][k];
+            }
+
+        for (int k = 0; k < N; k++)
+            for (int l = 0; l < N; l++)
+                if (k != ii && k != jj && l != ii && l != jj)
+                    C[k][l] = A[k][l];
+
+        error = 0;
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < N; j++)
+                if (i != j)
+                    error += C[i][j] * C[i][j];
+
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < N; j++)
+                A[i][j] = C[i][j];
+
+        max_elem = A[0][1];
+        delete[] C;
+    }
+
+    for (int i = 0; i < N; i++)
+        x[i] = A[i][i];
 }
 
 
