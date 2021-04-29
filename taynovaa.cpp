@@ -31,7 +31,7 @@ void taynovaa::lab2() {
             b[j] -= c * b[i];
         }
     }
-    // обратный
+// обратный
     for (int i = N - 1; i >= 0; i--) {
         double c = 0;
         for (int j = i + 1; j < N; j++) {
@@ -162,7 +162,6 @@ void taynovaa::lab6() {
             if (fabs(prev_x - x[i]) > 1e-18) go = 1;
         }
     }
-
 }
 
 
@@ -170,7 +169,40 @@ void taynovaa::lab6() {
  * Метод сопряженных градиентов
  */
 void taynovaa::lab7() {
+    double *r = new double[N];
+    double *Ar = new double[N];
+    double *xp = new double[N];
+    double t = 0;
+    bool go = 1;
+    fill(x, x + N, 0);
 
+    for (int i = 0; i < N; i++) r[i] = b[i] - SP(A[i], x, N);
+    for (int i = 0; i < N; i++) Ar[i] = SP(A[i], r, N);
+
+    double sr = SP(r, r, N);
+    double sAr = SP(Ar, r, N);
+    t = sr / sAr;
+
+    for (int i = 0; i < N; i++) x[i] += t * r[i];
+
+    double sArp = sAr;
+    double alpha = 1;
+
+    while (go) {
+        go = false;
+        for (int i = 0; i < N; i++) r[i] = b[i] - SP(A[i], x, N);
+        for (int i = 0; i < N; i++) Ar[i] = SP(A[i], r, N);
+        sr = SP(r, r, N);
+        sAr = SP(Ar, r, N);
+        t = sr / sAr;
+        alpha = 1. / (1 - (t * sr) / (alpha * t * sArp));
+        for (int i = 0; i < N; i++) {
+            double xpp = x[i];
+            x[i] = t * alpha * r[i] + alpha * x[i] + (1 - alpha) * xp[i];
+            xp[i] = xpp;
+            if (fabs(x[i] - xp[i]) > 1e-18) go = true;
+        }
+    }
 }
 
 
