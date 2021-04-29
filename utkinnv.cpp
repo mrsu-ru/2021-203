@@ -91,7 +91,22 @@ void utkinnv::lab4() {
  * Метод Якоби или Зейделя
  */
 void utkinnv::lab5() {
-
+    //Метод Зейделя
+    for (int i = 0; i < N; i++) x[i] = 1;
+    double *X = new double[N];
+    bool isContinue = true;
+    while (isContinue) {
+        isContinue = false;
+        for (int i = 0; i < N; i++) {
+            X[i] = b[i];
+            for (int j = 0; j < i; j++) X[i] -= A[i][j] * x[j];
+            for (int j = i + 1; j < N; j++) X[i] -= A[i][j] * x[j];
+            X[i] /= A[i][i];
+            if (fabs(X[i] - x[i]) > 1e-9) isContinue = true;
+            x[i] = X[i];
+        }
+    }
+    delete[] X;
 }
 
 
@@ -99,7 +114,39 @@ void utkinnv::lab5() {
  * Метод минимальных невязок
  */
 void utkinnv::lab6() {
+    double *r = new double[N];
+    double *Ar = new double[N];
+    for (int i = 0; i < N; i++) x[i] = 0;
+    bool is_continue = true;
+    while (is_continue) {
+        is_continue = false;
 
+        for (int i = 0; i < N; i++) r[i] = -b[i];
+
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < N; j++)
+                r[i] += A[i][j] * x[j];
+
+        for (int i = 0; i < N; i++) {
+            Ar[i] = 0;
+            for (int j = 0; j < N; j++) Ar[i] += A[i][j] * r[j];
+        }
+
+        double t = 0;
+        double Ar2 = 0;
+        for (int i = 0; i < N; i++) {
+            t += Ar[i] * r[i];
+            Ar2 += Ar[i] * Ar[i];
+        }
+        t /= Ar2;
+        for (int i = 0; i < N; i++) {
+            double temp_x = x[i];
+            x[i] = x[i] - t * r[i];
+            if (fabs(x[i] - temp_x) > 1e-9) is_continue = true;
+        }
+    }
+    delete[] r;
+    delete[] Ar;
 }
 
 
@@ -107,17 +154,135 @@ void utkinnv::lab6() {
  * Метод сопряженных градиентов
  */
 void utkinnv::lab7() {
+    double *r = new double[N];
+    double *Ar = new double[N];
+    double *prev_x = new double[N];
+    double t, a = 1, scalar_r = 0, scalar_Ar = 0;
+    bool is_continue = true;
+    for (int i = 0; i < N; i++) {
+        x[i] = 0;
+        r[i] = -b[i];
+    }
 
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < N; j++)
+            r[i] += A[i][j] * x[j];
+
+    for (int i = 0; i < N; i++) {
+        Ar[i] = 0;
+        for (int j = 0; j < N; j++) Ar[i] += A[i][j] * r[j];
+    }
+    for (int i = 0; i < N; i++) {
+        scalar_r += r[i] * r[i];
+        scalar_Ar += Ar[i] * r[i];
+    }
+    t = scalar_r / scalar_Ar;
+    for (int i = 0; i < N; i++) {
+        x[i] = t * b[i];
+    }
+    while (is_continue) {
+        is_continue = false;
+
+        for (int i = 0; i < N; i++) r[i] = -b[i];
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < N; j++)
+                r[i] += A[i][j] * x[j];
+
+        for (int i = 0; i < N; i++) {
+            Ar[i] = 0;
+            for (int j = 0; j < N; j++) Ar[i] += A[i][j] * r[j];
+        }
+
+        double temp_t = t, temp_scalar = scalar_Ar;
+        scalar_r = 0;
+        scalar_Ar = 0;
+        for (int i = 0; i < N; i++) {
+            scalar_r += r[i] * r[i];
+            scalar_Ar += Ar[i] * r[i];
+        }
+        t = scalar_r / scalar_Ar;
+        a = 1.0 / (1 - (t * scalar_r) / (a * temp_t * temp_scalar));
+        for (int i = 0; i < N; i++) {
+            double temp_x = x[i];
+            x[i] = a * x[i] + (1 - a) * prev_x[i] - t * a * r[i];
+            prev_x[i] = temp_x;
+            if (fabs(x[i] - temp_x) > 1e-9) is_continue = true;
+        }
+    }
+    delete[] r;
+    delete[] Ar;
+    delete[] prev_x;
 }
 
 
 void utkinnv::lab8() {
+    double **b = new double *[N];
+    double t, eps = 1;
+    for (int i = 0; i < N; ++i) {
+        b[i] = new double[N];
+    }
+    do {
+        double max_el = 1e-18;
+        int max_i, max_j;
+        for (int i = 0; i < N; ++i) {
+            for (int j = 0; j < N; ++j) {
+                if (i == j) continue;
+                if (fabs(A[i][j]) > max_el) {
+                    max_el = fabs(A[i][j]);
+                    max_i = i;
+                    max_j = j;
+                }
+            }
+        }
+        double phi = atan(2 * A[max_i][max_j] / (A[max_j][max_j] - A[max_i][max_i])) / 2;
+        double s = sin(phi), c = cos(phi);
+        for (int i = 0; i < N; ++i)
+            for (int j = 0; j < N; ++j)
+                b[i][j] = A[i][j];
 
+        for (int r = 0; r < N; ++r) {
+            b[r][max_i] = A[r][max_i] * c - A[r][max_j] * s;
+            b[r][max_j] = A[r][max_i] * s + A[r][max_j] * c;
+        }
+        for (int l = 0; l < N; ++l) {
+            A[max_i][l] = b[max_i][l] * c - b[max_j][l] * s;
+            A[max_j][l] = b[max_i][l] * s + b[max_j][l] * c;
+        }
+        A[max_i][max_j] = 0;
+        t = 0;
+        for (int i = 0; i < N; ++i)
+            for (int j = i + 1; j < N; ++j)
+                t += A[i][j] * A[i][j] + A[j][i] * A[j][i];
+    } while (t > eps);
+    for (int i = 0; i < N; ++i) {
+        x[i] = A[i][i];
+        delete[] b[i];
+    }
+    delete[] b;
 }
 
 
 void utkinnv::lab9() {
-
+    double eps = 1e-2, l, l_prev;
+    double *y = new double[N];
+    double *y_prev = new double[N];
+    for (int i = 0; i < N; ++i) y_prev[i] = 42;
+    do {
+        l_prev = l;
+        for (int i = 0; i < N; ++i) {
+            y[i] = 0;
+            for (int j = 0; j < N; ++j) {
+                y[i] += A[i][j] * y_prev[j];
+            }
+        }
+        l = (fabs(y[0]) > eps && fabs(y_prev[0]) > eps) ? y[0] / y_prev[0] : 0;
+        for (int i = 0; i < N; ++i) {
+            y_prev[i] = y[i];
+        }
+    } while (fabs(l - l_prev) > eps);
+    cout << "max lambda = " << l << endl;
+    delete[] y;
+    delete[] y_prev;
 }
 
 

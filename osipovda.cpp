@@ -136,7 +136,7 @@ void osipovda::lab5() {
     for (int i = 0; i < N; i++) x[i] = 1;
 
     while (flag) {
-        flag  = false;
+        flag = false;
         for (int i = 0; i < N; i++) {
             newX[i] = b[i];
             for (int j = 0; j < N; j++) {
@@ -158,7 +158,46 @@ void osipovda::lab5() {
  * Метод минимальных невязок
  */
 void osipovda::lab6() {
+    double *r = new double[N];
+    double *Ar = new double[N];
+    double eps = 1.e-9;
 
+    bool flag = true;
+    while (flag) {
+        flag = false;
+
+        for (int i = 0; i < N; i++) {
+            r[i] = b[i];
+            for (int j = 0; j < N; j++) {
+                r[i] -= A[i][j] * x[j];
+            }
+        }
+
+        for (int i = 0; i < N; i++) {
+            Ar[i] = 0;
+            for (int j = 0; j < N; j++) {
+                Ar[i] += A[i][j] * r[j];
+            }
+        }
+
+        double t = 0;
+        double Ar_scalar = 0;
+        for (int i = 0; i < N; i++) {
+            t += Ar[i] * r[i];
+            Ar_scalar += Ar[i] * Ar[i];
+        }
+
+        t /= Ar_scalar;
+        for (int i = 0; i < N; i++) {
+            double temp_x = x[i];
+            x[i] = x[i] + t * r[i];
+            if (fabs(x[i] - temp_x) > eps) {
+                flag = true;
+            }
+        }
+    }
+    delete[] r;
+    delete[] Ar;
 }
 
 
@@ -166,17 +205,234 @@ void osipovda::lab6() {
  * Метод сопряженных градиентов
  */
 void osipovda::lab7() {
+    double *r = new double[N];
+    double *Ar = new double[N];
+    double r_scalar_old, r_scalar = 0;
+    double t, t_old;
+    double alpha_old, alpha = 1;
+    double eps = 1.e-18;
+    double Ar_scalar = 0;
 
+    r_scalar = 0;
+    for (int i = 0; i < N; i++) {
+        r[i] = b[i];
+        for (int j = 0; j < N; j++) {
+            r[i] -= A[i][j] * x[j];
+        }
+        r_scalar += r[i] * r[i];
+    }
+
+    Ar_scalar = 0;
+    for (int i = 0; i < N; i++) {
+        Ar[i] = 0;
+        for (int j = 0; j < N; j++) {
+            Ar[i] += A[i][j] * r[j];
+        }
+        Ar_scalar += Ar[i] * r[i];
+    }
+    t = r_scalar / Ar_scalar;
+
+    double **E = new double *[N];
+    for (int i = 0; i < N; i++) {
+        E[i] = new double[N];
+        for (int j = 0; j < N; j++) {
+            if (i == j) E[i][j] = 1;
+            else E[i][j] = 0;
+        }
+    }
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            E[i][j] -= t * A[i][j];
+        }
+    }
+
+    double *tb = new double[N];
+    for (int i = 0; i < N; i++) {
+        tb[i] = t * b[i];
+    }
+
+    double *Ex = new double[N];
+    for (int i = 0; i < N; i++) {
+        Ex[i] = 0;
+        for (int j = 0; j < N; j++) {
+            Ex[i] += E[i][j] * x[j];
+        }
+    }
+
+    for (int i = 0; i < N; i++) {
+        x[i] = Ex[i] + tb[i];
+    }
+
+    bool flag = true;
+    r_scalar_old = r_scalar;
+    alpha_old = alpha;
+    t_old = t;
+    while (flag) {
+        flag = false;
+
+        r_scalar = 0;
+        for (int i = 0; i < N; i++) {
+            r[i] = b[i];
+            for (int j = 0; j < N; j++) {
+                r[i] -= A[i][j] * x[j];
+            }
+            r_scalar += r[i] * r[i];
+        }
+
+        Ar_scalar = 0;
+        for (int i = 0; i < N; i++) {
+            Ar[i] = 0;
+            for (int j = 0; j < N; j++) {
+                Ar[i] += A[i][j] * r[j];
+            }
+            Ar_scalar += Ar[i] * r[i];
+        }
+        t = r_scalar / Ar_scalar;
+
+        alpha = 1 - 1. / alpha_old * t / t_old * r_scalar / r_scalar_old;
+        alpha = 1. / alpha;
+
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (i == j) E[i][i] = 1;
+                else E[i][j] = 0;
+            }
+        }
+
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                E[i][j] -= t * A[i][j];
+            }
+        }
+
+        for (int i = 0; i < N; i++) {
+            tb[i] = alpha * t * b[i];
+        }
+
+        for (int i = 0; i < N; i++) {
+            Ex[i] = 0;
+            for (int j = 0; j < N; j++) {
+                Ex[i] += E[i][j] * x[j];
+            }
+            Ex[i] *= alpha;
+        }
+
+        for (int i = 0; i < N; i++) {
+            double temp_x = x[i];
+            x[i] = Ex[i] + (1 - alpha) * x[i] + tb[i];
+            if (fabs(x[i] - temp_x) > eps) {
+                flag = true;
+            }
+        }
+
+        r_scalar_old = r_scalar;
+        alpha_old = alpha;
+        t_old = t;
+    }
+    delete[] r;
+    delete[] Ar;
 }
 
 
 void osipovda::lab8() {
+    double eps = 1;
+    double err = 0;
+    for (int i = 0; i < N; i++)
+        for (int j = i + 1; j < N; j++)
+            err += A[i][j] * A[i][j] + A[j][i] * A[j][i];
 
+    double **C = new double *[N];
+    for (int i = 0; i < N; i++)
+        C[i] = new double[N];
+
+    while (err > eps) {
+        int i = 0, j = 1;
+        double mx = fabs(A[0][1]);
+        for (int ii = 0; ii < N; ii++) {
+            for (int jj = 0; jj < N; jj++) {
+                if (ii == jj) continue;
+                if (fabs(A[ii][jj]) > mx) {
+                    mx = fabs(A[ii][jj]);
+                    i = ii, j = jj;
+                }
+            }
+        }
+
+        double phi = atan(2 * A[i][j] / (A[j][j] - A[i][i])) / 2;
+        double sn = sin(phi), cs = cos(phi);
+
+        for (int ii = 0; ii < N; ii++) {
+            for (int jj = 0; jj < N; jj++) {
+                C[ii][jj] = A[ii][jj];
+            }
+        }
+        for (int r = 0; r < N; r++) {
+            C[r][i] = A[r][i] * cs - A[r][j] * sn;
+            C[r][j] = A[r][i] * sn + A[r][j] * cs;
+        }
+        for (int c = 0; c < N; c++) {
+            A[i][c] = C[i][c] * cs - C[j][c] * sn;
+            A[j][c] = C[i][c] * sn + C[j][c] * cs;
+        }
+        A[i][j] = 0;
+
+        err = 0;
+        for (int ii = 0; ii < N; ii++)
+            for (int jj = ii + 1; jj < N; jj++)
+                err += A[ii][jj] * A[ii][jj] + A[jj][ii] * A[jj][ii];
+    }
+
+    for (int i = 0; i < N; i++) {
+        x[i] = A[i][i];
+    }
+
+    for (int i = 0; i < N; i++) {
+        delete[] C[i];
+    }
+    delete[] C;
 }
 
 
 void osipovda::lab9() {
+    double eps = 1e-3;
+    double *y = new double[N];
+    double *yPred = new double[N];
 
+    for (int i = 0; i < N; i++) {
+        yPred[i] = 1;
+    }
+
+    double delta = 1e9;
+    double maxLambda = 0;
+
+    while (delta > eps) {
+        for (int i = 0; i < N; i++) {
+            y[i] = 0;
+            for (int j = 0; j < N; j++) {
+                y[i] += A[i][j] * yPred[j];
+            }
+        }
+
+        double lambda = 0;
+        for (int i = 0; i < N; i++) {
+            if (fabs(y[i]) > eps && fabs(yPred[i]) > eps) {
+                lambda = y[i] / yPred[i];
+                break;
+            }
+        }
+
+        delta = fabs(lambda - maxLambda);
+        maxLambda = lambda;
+
+        for (int i = 0; i < N; i++) {
+            yPred[i] = y[i];
+        }
+    }
+
+    cout << "maxLambda = " << maxLambda << endl;
+
+    delete[] y;
+    delete[] yPred;
 }
 
 
