@@ -277,7 +277,35 @@ void katinda::lab8()
 
 void katinda::lab9()
 {
-
+    double eps = 1e-3;
+    double *y = new double[N];
+    double *prev_y = new double[N];
+    double eigenvalue;
+    for(int i = 0; i < N; i++)
+        prev_y[i] = 1;
+    while(true){
+        for(int i = 0; i < N; i++){
+            double sum = 0;
+            for(int j = 0; j < N; j++){
+                sum += A[i][j] * prev_y[j];
+            }
+            y[i] = sum;
+        }
+        double tmp = eigenvalue;
+        for(int i = 0; i < N; i++) {
+            if(abs(y[i]) > eps && abs(prev_y[i]) > eps){
+                eigenvalue = y[i] / prev_y[i];
+                break;
+            }
+        }
+        if(abs(eigenvalue - tmp) < eps){
+            break;
+        }
+        for(int i = 0; i < N; i++){
+            prev_y[i] = y[i];
+        }
+    }
+    cout << "Maximum eigenvalue = " << eigenvalue;
 }
 
 
