@@ -207,7 +207,41 @@ void taynovaa::lab7() {
 
 
 void taynovaa::lab8() {
+    double **U = new double *[N];
+    for (int i = 0; i < N; i++) U[i] = new double[N];
+    double t = 2;
+    int ii = 0, jj = N - 1;
+    while (t > 1) {
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (i == j) continue;
+                if (abs(A[ii][jj]) < abs(A[i][j])) {
+                    ii = i, jj = j;
+                }
+            }
+        }
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < N; j++)
+                U[i][j] = A[i][j];
 
+        double phi = 0.5 * atan(2 * A[ii][jj] / (-A[ii][ii] + A[jj][jj]));
+        for (int i = 0; i < N; i++) {
+            U[i][ii] = A[i][ii] * cos(phi) - A[i][jj] * sin(phi);
+            U[i][jj] = A[i][ii] * sin(phi) + A[i][jj] * cos(phi);
+        }
+        for (int i = 0; i < N; i++) {
+            A[ii][i] = U[ii][i] * cos(phi) - U[jj][i] * sin(phi);
+            A[jj][i] = U[ii][i] * sin(phi) + U[jj][i] * cos(phi);
+        }
+        t = 0;
+        A[ii][jj] = 0;
+        for (int i = 0; i < N; ++i)
+            for (int j = i + 1; j < N; ++j)
+                t += A[i][j] * A[i][j] + A[j][i] * A[j][i];
+    }
+    for (int i = 0; i < N; ++i) {
+        x[i] = A[i][i];
+    }
 }
 
 
