@@ -104,7 +104,51 @@ x[i] = betta[i] + alpha[i] * x[i + 1];
  * Метод Холецкого
  */
 void shabanovdo::lab4()
+
 {
+double **help_matrix = new double*[N];
+for (int i = 0; i < N; i++)
+help_matrix[i] = new double[N];
+
+for(int i = 0; i < N; i++)
+for(int j = 0; j < N; j++)
+help_matrix[i][j] = 0;
+
+double *d = new double[N];
+
+for(int i = 0; i < N; i++)
+{
+double tmp = A[i][i];
+for(int j = 0; j <= i - 1; j++){
+tmp -= d[j] * help_matrix[j][i] * help_matrix[j][i];
+}
+d[i] = signbit(tmp) == false ? 1 : -1;
+help_matrix[i][i]=sqrt(tmp * d[i]);
+
+for(int j = i + 1; j < N; j++)
+{
+tmp = 0;
+for(int k = 0; k <= j - 1; k++)
+tmp += d[k] * help_matrix[k][i] * help_matrix[k][j];
+help_matrix[i][j] = (A[i][j] - tmp) / (d[i] * help_matrix[i][i]);
+}
+}
+for(int i = 0; i < N; i++){
+b[i] /= help_matrix[i][i];
+for(int j = i + 1; j < N; j++)
+b[j] -= b[i] * help_matrix[i][j];
+}
+for(int i = 0; i < N; i++)
+for(int j = i; j < N; j++)
+help_matrix[i][j] *= d[i];
+
+for(int i = N - 1; i >= 0; i--){
+b[i] /= help_matrix[i][i];
+for(int j = i - 1; j >= 0; j--)
+b[j] -= b[i] * help_matrix[j][i];
+}
+for(int i = 0; i < N; i++)
+x[i] = b[i];
 
 }
 
@@ -115,6 +159,36 @@ void shabanovdo::lab4()
  */
 void shabanovdo::lab5()
 {
+double *prev_x = new double [N];
+double tmpOne, tmpTwo;
+double norma;
+while(true){
+
+for(int i = 0; i < N; i++)
+prev_x[i] = x[i];
+
+for(int i = 0; i < N; i++){
+
+tmpOne = 0;
+for(int j = i + 1; j < N; j++)
+tmpOne += A[i][j] * x[j];
+
+tmpTwo = 0;
+for(int j = i - 1; j >= 0; j--)
+tmpTwo += A[i][j] * x[j];
+
+x[i] = (b[i] - (tmpOne + tmpTwo)) / A[i][i];
+}
+norma = 0;
+
+for (int i = 0; i < N; i++){
+norma += abs(x[i] - prev_x[i]);
+}
+
+if(norma > 1e-21) break;
+}
+
+delete [] prev_x;
 
 }
 
