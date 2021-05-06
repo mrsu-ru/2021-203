@@ -8,7 +8,7 @@
  */
 void tepaykinma::lab1()
 {
-  cout << "Hello World!" << endl;
+    cout << "Hello World!" << endl;
 }
 
 
@@ -112,7 +112,70 @@ void tepaykinma::lab3()
  */
 void tepaykinma::lab4()
 {
-
+    double** S = new double*[N];
+    double* D = new double[N];
+    for(int i = 0; i < N; i++)
+    {
+        S[i] = new double[N];
+    }
+    forn(i, N)
+    {
+        foran(j, i, N)
+        {
+            if(i == j)
+            {
+                double c = A[i][i];
+                forn(k, i)
+                {
+                    c -= S[k][i] * D[k] * S[k][j];
+                }
+                if(c >= 0)
+                    D[i] = 1;
+                else
+                    D[i] = -1;
+                S[i][i] = sqrt(D[i]*c);
+            }
+            else
+            {
+                double c = A[i][j];
+                forn(k, i)
+                {
+                    c -= S[k][i] * D[k] * S[k][j];
+                }
+                S[i][j] = c / (S[i][i] * D[i]);
+            }
+        }
+    }
+    double** StD = new double*[N];
+    forn(i, N) StD[i] = new double[N];
+    forn(i, N)
+    {
+        forn(j, i+1)
+        {
+            StD[i][j] = S[j][i] * D[i];
+        }
+    }
+    double* Y = new double[N];
+    Y[0] = b[0] / StD[0][0];
+    foran(i, 1, N)
+    {
+        double c = b[i];
+        forn(j, N)
+        {
+            c -= StD[i][j] * Y[j];
+        }
+        Y[i] = c / StD[i][i];
+    }
+    x[N - 1] = Y[N - 1] / S[N - 1][N - 1];
+    for(int i = N - 2; i >= 0; i--)
+    {
+        double c = Y[i];
+        for(int j = N - 1; j > i; j--)
+        {
+            c -= S[i][j] * x[j];
+        }
+        x[i] = c / S[i][i];
+    }
 }
 
 
@@ -160,7 +223,7 @@ void tepaykinma::lab9()
 
 std::string tepaykinma::get_name()
 {
-  return "Tepaykin M.A.";
+    return "Tepaykin M.A.";
 }
 
 
