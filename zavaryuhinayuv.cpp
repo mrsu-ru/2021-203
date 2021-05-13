@@ -138,7 +138,32 @@ void zavaryuhinayuv::lab4() {
  * Метод Якоби или Зейделя
  */
 void zavaryuhinayuv::lab5() {
+    //Зейделя
+    int i, j;
+    for (i = 0; i < N; i++) {
+        x[i] = 1;
+    }
+    double *x2 = new double[N];
+    bool temp = true;
+    while (temp) {
+        temp = false;
+        for (i = 0; i < N; i++) {
+            x2[i] = b[i];
+            for (j = 0; j < N; j++) {
+                if (i == j) continue;
+                x2[i] = x2[i] + x[j] * (-A[i][j]);
+            }
+            x2[i] = x2[i] / A[i][i];
 
+            if (fabs(x2[i] - x[i]) > 1e-9) {
+                temp = true;
+            }
+
+            x[i] = x2[i];
+
+        }
+    }
+    delete[] x2;
 }
 
 
