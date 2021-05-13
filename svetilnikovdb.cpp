@@ -316,9 +316,43 @@ void svetilnikovdb::lab8()
 }
 
 
+
+/**
+ * Нахождение наибольшего по модулю собственного значения матрицы.
+ */
 void svetilnikovdb::lab9()
 {
-
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++)
+            if (A[i][j] != A[j][i]) return;
+    }
+    double l, maxl = 0;
+    bool cont = true;
+    double *y = new double[N];
+    double *y_prev = new double[N];
+    for (int i = 0; i < N; i++) y_prev[i] = 1;
+    while (cont) {
+        cont = false;
+        for (int i = 0; i < N; i++) {
+            y[i] = 0;
+            for (int j = 0; j < N; j++) {
+                y[i] += A[i][j] * y_prev[j];
+            }
+        }
+        l = 0;
+        for (int i = 0; i < N; i++) {
+            if (fabs(y[i]) > 1E-3 && fabs(y_prev[i]) > 1E-3) {
+                l = y[i] / y_prev[i];
+                break;
+            }
+        }
+        if (fabs(l - maxl) > 1E-3) cont = true;
+        maxl = l;
+        for (int i = 0; i < N; i++) y_prev[i] = y[i];
+    }
+    cout << "The largest lambda: " << maxl << endl;
+    delete[] y;
+    delete[] y_prev;
 }
 
 
