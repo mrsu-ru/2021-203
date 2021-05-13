@@ -217,11 +217,6 @@ void tepaykinma::lab5()
 
     }while(norm > eps);
 
-
-
-
-
-
 }
 
 
