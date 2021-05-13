@@ -8,7 +8,7 @@
  */
 void tepaykinma::lab1()
 {
-    cout << "Hello World!" << endl;
+  cout << "Hello World!" << endl;
 }
 
 
@@ -112,74 +112,6 @@ void tepaykinma::lab3()
  */
 void tepaykinma::lab4()
 {
-    int n = N;
-    double** l = new double*[n];
-
-    forn(i, n)
-    {
-        l[i] = new double[n];
-    }
-
-    l[0][0] = sqrt(A[0][0]);
-    foran(i, 1, n)
-    {
-        l[i][0] = A[i][0]/l[0][0];
-    }
-
-    foran(i, 1, n)
-    {
-        double sum = 0;
-        forn(p, i-1)
-        {
-            sum+=l[i][p] * l[i][p];
-        }
-
-        l[i][i] = sqrt(A[i][i] - sum);
-    }
-
-    foran(i, 1, n-1)
-    {
-        foran(j, i+1, n)
-        {
-            double sum = 0;
-            forn(p, i-1)
-            {
-                sum+=l[i][p] * l[j][p];
-            }
-            l[j][i] = (A[j][i] - sum) / l[i][i];
-        }
-    }
-
-    double* y = new double[n];
-
-
-    for (int i = 0; i < n; i++)
-    {
-        foran(j, i + 1, n)
-        {
-            b[i] += -l[i][j] * x[j];
-            l[i][j] = 0;
-        }
-        y[i] = b[i] / l[i][i];
-    }
-
-
-
-    for (int i = n-1; i >= 0; i--)
-    {
-        foran(j, i + 1, n)
-
-        {
-            y[i] += -l[i][j] * x[j];
-            l[i][j] = 0;
-        }
-        x[i] = y[i] / l[i][i];
-    }
-
-
-
-
-
 
 }
 
@@ -190,32 +122,6 @@ void tepaykinma::lab4()
  */
 void tepaykinma::lab5()
 {
-    int n = N;
-    double eps = 1e-20;
-    auto* x1 = new double[N];
-    forn(i,n)
-    {
-        x1[i] = 0;
-    }
-    double norm = 0;
-    do{
-        forn(i, n) {
-            double sum = 0;
-            forn(j, n) {
-
-                if (i != j)sum += A[i][j] * x[j];
-            }
-            x1[i] = (b[i] - sum) / A[i][i];
-        }
-        norm = 0;
-        forn(i,n)
-        {
-            norm+=fabs(x1[i]-x[i]);
-        }
-
-        forn(i,n) x[i] = x1[i];
-
-    }while(norm > eps);
 
 }
 
@@ -254,7 +160,7 @@ void tepaykinma::lab9()
 
 std::string tepaykinma::get_name()
 {
-    return "Tepaykin M.A.";
+  return "Tepaykin M.A.";
 }
 
 
