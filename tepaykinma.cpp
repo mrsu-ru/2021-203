@@ -183,10 +183,40 @@ void tepaykinma::lab4()
 /**
  * Метод Якоби или Зейделя
  */
+
 void tepaykinma::lab5()
 {
+    int n = N;
+    double eps = 1e-20;
+    auto x1 = new double[N];
+    forn(i,n)
+    {
+        x1[i] = 0;
+    }
+    double norm = 0;
+    do{
+        forn(i, n) {
+            double sum = 0;
+            forn(j, n) {
+
+                if (i != j)sum += A[i][j] * x[j];
+            }
+            x1[i] = (b[i] - sum) / A[i][i];
+        }
+        norm = 0;
+        forn(i,n)
+        {
+            norm+=fabs(x1[i]-x[i]);
+        }
+
+        forn(i,n) x[i] = x1[i];
+
+    }while(norm > eps);
 
 }
+
+
+
 
 
 
@@ -232,4 +262,3 @@ std::string tepaykinma::get_name()
 #undef LL
 #undef forn
 #undef foran
-
