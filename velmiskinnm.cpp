@@ -83,7 +83,67 @@ void velmiskinnm::lab3()
  */
 void velmiskinnm::lab4()
 {
+    double** S = new double*[N];
+    for(int i = 0; i < N; i++){
+        S[i] = new double[N];
+    }
 
+    double* D = new double[N];
+    //первый этап - поиск LU-разложения
+    //начальная инициализация массива вспомогательных сумм
+
+    for(int i = 0; i < N; i++){
+        for(int j = i; j < N; j++){
+            if(i == j){
+                double c = A[i][i];
+                for(int k = 0; k < i; k++){
+                    c -= S[k][i] * D[k] * S[k][j];
+                }
+                if(c >= 0)
+                    D[i] = 1;
+                else
+                    D[i] = -1;
+                S[i][i] = sqrt(D[i]*c);
+            }
+            else{
+                double c = A[i][j];
+                for(int k = 0; k < i; k++){
+                    c -= S[k][i] * D[k] * S[k][j];
+                }
+                S[i][j] = c / (S[i][i] * D[i]);
+            }
+        }
+    }
+    double** StD = new double*[N];
+    for(int i = 0; i < N; i++)
+        StD[i] = new double[N];
+    for(int i = 0; i < N; i++){
+        for(int j = 0; j <= i; j++){
+            StD[i][j] = S[j][i] * D[i];
+        }
+    }
+    double* y = new double[N];
+    //второй этап - поиск корней
+    y[0] = b[0] / StD[0][0];
+
+    for(int i = 1; i < N; i++){
+        double c = b[i];
+
+        for(int j = 0; j < i; j++){
+            c -= StD[i][j] * y[j];
+        }
+        y[i] = c / StD[i][i];
+    }
+
+    //Sx = y
+    x[N - 1] = y[N - 1] / S[N - 1][N - 1];
+    for(int i = N - 2; i >= 0; i--){
+        double c = y[i];
+        for(int j = N - 1; j > i; j--){
+            c -= S[i][j] * x[j];
+        }
+        x[i] = c / S[i][i];
+    }
 }
 
 
