@@ -246,7 +246,28 @@ void taynovaa::lab8() {
 
 
 void taynovaa::lab9() {
+    double eps = 1e-3;
+    double *y_prev = new double[N];
+    fill(y_prev, y_prev + N, 1);
+    double *y = new double[N];
+    double x;
+    while (true) {
+        for (int i = 0; i < N; i++)
+            y[i] = SP(A[i], y_prev, N);
 
+        int index = 0;
+        while (abs(y[index]) < eps and abs(y_prev[index]) < eps) index++;
+        double nx = y[index] / y_prev[index];
+        if (abs(nx - x) < eps) {
+            x = nx;
+            break;
+        }
+        x = nx;
+        for(int i = 0 ; i < N; i++){
+            y_prev[i] = y[i];
+        }
+    }
+    cout << "Max value: " << x << '\n';
 }
 
 
