@@ -82,7 +82,50 @@ void guskovaim::lab3()
  */
 void guskovaim::lab4()
 {
+    int i, j, k;
+    double **S = new double *[N];
+    double *D = new double[N];
 
+    for (i = 0; i < N; i++) {
+        S[i] = new double[N];
+    }
+
+    for (i = 0; i < N; i++) {
+        for (k = 0; k < i; k++) {
+            A[i][i] = A[i][i] - S[k][i] * D[k] * S[k][i];
+        }
+        if (A[i][i] >= 0) {
+            D[i] = 1;
+        } else D[i] = -1;
+        S[i][i] = sqrt(D[i] * A[i][i]);
+        for (j = i + 1; j < N; j++) {
+            for (k = 0; k < j; k++) {
+                A[i][j] = A[i][j] - S[k][i] * D[k] * S[k][j];
+            }
+            S[i][j] = A[i][j] / (S[i][i] * D[i]);
+        }
+    }
+
+    for (i = 0; i < N; i++) {
+        for (j = 0; j < i; j++) {
+            b[i] = b[i] - S[j][i] * D[j] * b[j];
+        }
+        b[i] = b[i] / (S[i][i] * D[i]);
+    }
+
+    for (i = N - 1; i > -1; i--) {
+        for (int j = i + 1; j < N; j++) {
+            b[i] = b[i] - S[i][j] * x[j];
+        }
+        x[i] = b[i] / S[i][i];
+    }
+
+    for (i = 0; i < N; i++) {
+        delete[] S[i];
+    }
+
+    delete[] S;
+    delete[] D;
 }
 
 
