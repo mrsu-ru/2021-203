@@ -5,18 +5,61 @@
  */
 void inshakovaas::lab1()
 {
-
+    cout<<"Hello world!";
 }
 
 
 /**
  * Метод Гаусса с выбором главного элемента
  */
-void inshakovaas::lab2()
-{
+void inshakovaas::lab2() {
+    int n = N;
 
+    for(int i = 0; i < n; i++)
+    {
+        int maxi = i;
+
+        for(int j = i + 1; j < n; j++)
+        {
+            if(A[j][i] > A[maxi][i])
+                maxi = j;
+        }
+
+        for(int k = 0; k < n; k++)
+        {
+            swap(A[maxi][k],A[i][k]);
+        }
+
+        swap(b[maxi],b[i]);
+        double firstElem = A[i][i];
+
+        for(int j = i; j < n; j++)
+        {
+            A[i][j] /= firstElem;
+        }
+        b[i] /= firstElem;
+
+        for(int j = i + 1; j < n; j++)
+        {
+            firstElem = A[j][i];
+            for(int k = i; k < n; k++)
+            {
+                A[j][k] -= A[i][k] * firstElem;
+            }
+            b[j] -= b[i] * firstElem;
+        }
+    }
+
+    for (int i = n; i >= 0; i--)
+    {
+        for(int j = i + 1; j < n; j++)
+        {
+            b[i] += -A[i][j] * x[j];
+            A[i][j] = 0;
+        }
+        x[i] = b[i];
+    }
 }
-
 
 
 /**
@@ -24,7 +67,21 @@ void inshakovaas::lab2()
  */
 void inshakovaas::lab3()
 {
+    double* alpha = new double[N];
+    double* beta = new double[N];
 
+    alpha[0] = -A[0][1] / A[0][0];
+    beta[0] = b[0] / A[0][0];
+
+    for(int i = 1; i < N; i++){
+        alpha[i] = -A[i][i + 1] / (A[i][i] + A[i][i - 1] * alpha[i - 1]);
+        beta[i] = (b[i] - A[i][i - 1] * beta[i - 1]) / (A[i][i] + A[i][i - 1] * alpha[i - 1]);
+    }
+    x[N - 1] = beta[N - 1];
+
+    for(int i = N - 2; i >= 0; i--){
+        x[i] = alpha[i] * x[i + 1] + beta[i];
+    }
 }
 
 
@@ -82,5 +139,5 @@ void inshakovaas::lab9()
 
 std::string inshakovaas::get_name()
 {
-  return "Zhalnin R.V.";
+  return "Inshakova A.S.";
 }

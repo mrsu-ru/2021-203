@@ -5,7 +5,7 @@
  */
 void chernovaaa::lab1()
 {
-
+    cout << "Hello World!";
 }
 
 
@@ -14,7 +14,48 @@ void chernovaaa::lab1()
  */
 void chernovaaa::lab2()
 {
-
+    for(int i = 0; i < N; i++)
+    {
+        int m = i;
+        for (int j = i+1; j < N; j++)
+        {
+            if (abs(A[j][i]) > abs(A[m][i]))
+            {
+                m = j;
+            }
+        }
+        swap(A[i], A[m]);
+        swap(b[i], b[m]);
+    }
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = i + 1; j < N; j++)
+        {
+            double c = A[j][i]/A[i][i];
+            for (int k = i; k < N; k++)
+            {
+                A[j][k] -= c * A[i][k];
+            }
+            b[j] -= c * b[i];
+        }
+    }
+    for (int i = 0; i < N; i++)
+    {
+        double q = A[i][i];
+        for (int j = 0; j < N; j++)
+        {
+            A[i][j] = A[i][j] / q;
+        }
+        b[i] /= q;
+    }
+    x[N - 1] = b[N - 1];
+    for(int i = N - 2; i >= 0; i--)
+    {
+        x[i] = b[i];
+        for(int j = i + 1; j < N; j++){
+            x[i] -= A[i][j] * x[j];
+        }
+    }
 }
 
 
@@ -82,5 +123,5 @@ void chernovaaa::lab9()
 
 std::string chernovaaa::get_name()
 {
-  return "Zhalnin R.V.";
+  return "Chernova A.A.";
 }
