@@ -208,7 +208,54 @@ void kulaginpa::lab5()
  */
 void kulaginpa::lab6()
 {
+	size_t n = N;
+	double eps = 1.E-10;
+	double *r = new double[N];
+	double *Ar = new double[N];
+	bool stop = false;
 
+	//начальное приближение
+	for (size_t i = 0; i < n; i++)
+		x[i] = A[i][i];
+	
+
+	while (!stop)
+	{
+		// вычисление невязки (1)
+		for (size_t i = 0; i < n; i++)
+		{
+			r[i] = b[i];
+			for (size_t j = 0; j < n; j++)
+				r[i] -= A[i][j] * x[j];
+		}
+		// вычисление произведения A * r
+		for (size_t i = 0; i < n; i++)
+		{
+			Ar[i] = 0;
+			for (size_t j = 0; j < n; j++)
+				Ar[i] += A[i][j] * r[j];
+		}
+		// вычисление скалярных произведений для тау
+		double scal_mult_Ar_r = 0;
+		double scal_mult_Ar_Ar = 0;
+		for (size_t i = 0; i < n; i++)
+		{
+			scal_mult_Ar_r += Ar[i] * r[i];
+			scal_mult_Ar_Ar += Ar[i] * Ar[i];
+		}
+		double tau = scal_mult_Ar_r / scal_mult_Ar_Ar;
+		// вычисление нового значения x, зная тау (2)
+		stop = true;
+		for (size_t i = 0; i < n; i++) 
+		{
+			double new_x = x[i] + tau * r[i];
+			if (abs(x[i] - new_x) > eps)
+				stop = false;
+			x[i] = new_x;
+		}
+	}
+	delete[] r;
+	delete[] Ar;
 }
 
 
@@ -218,7 +265,131 @@ void kulaginpa::lab6()
  */
 void kulaginpa::lab7()
 {
+	size_t n = N;
+	double eps = 1.E-10;
+	double *r = new double[N];
+	double *Ar = new double[N];
+	double **E = new double*[N];
+	E[0] = new double[N*N];
+	for (int i = 0; i < N; i++)
+		E[i] = E[0] + i * N;
 
+	for (size_t i = 0; i < n; i++)
+		for (size_t j = 0; j < n; j++)
+			i != j ? E[i][j] = 0 : E[i][j] = 1;
+
+	//начальное приближаение
+	for (size_t i = 0; i < n; i++)
+		x[i] = A[i][i];
+	// вычисление невязки (1)
+	for (size_t i = 0; i < n; i++)
+	{
+		r[i] = b[i];
+		for (size_t j = 0; j < n; j++)
+			r[i] -= A[i][j] * x[j];
+	}
+	double scalar_mult_r_r = 0;
+	for (size_t i = 0; i < n; i++)
+		scalar_mult_r_r += r[i] * r[i];
+
+	// вычисление произведения A * r
+	for (size_t i = 0; i < n; i++)
+	{
+		Ar[i] = 0;
+		for (size_t j = 0; j < n; j++)
+			Ar[i] += A[i][j] * r[j];
+	}
+	double scalar_mult_Ar_r = 0;
+	for (size_t i = 0; i < n; i++)
+		scalar_mult_Ar_r += Ar[i] * r[i];
+
+	double tau = scalar_mult_r_r / scalar_mult_Ar_r;
+	
+	for (size_t i = 0; i < n; i++) {
+		for (size_t j = 0; j < n; j++)
+			E[i][j] -= tau * A[i][j];
+	}
+
+	double *tau_b = new double[N];
+	double *E_x = new double[N];
+	for (size_t i = 0; i < n; i++)
+	{
+		tau_b[i] = tau * b[i];
+		E_x[i] = 0;
+		for (size_t j = 0; j < n; j++)
+			E_x[i] += E[i][j] * x[j];
+	}
+
+	for (size_t i = 0; i < n; i++)
+		x[i] = E_x[i] + tau_b[i];
+
+	bool stop = false;
+	double scalar_mult_r_r_prev = scalar_mult_r_r;
+	double alpha, alpha_prev = 1;
+	double tau_prev = tau;
+	while (!stop)
+	{
+		// Вычисление (r,r)
+		for (size_t i = 0; i < n; i++)
+		{
+			r[i] = b[i];
+			for (size_t j = 0; j < n; j++)
+				r[i] -= A[i][j] * x[j];
+		}
+		for (size_t i = 0; i < n; i++)
+			scalar_mult_r_r += r[i] * r[i];
+
+		// вычисление (Ar,r)
+		for (size_t i = 0; i < n; i++)
+		{
+			Ar[i] = 0;
+			for (size_t j = 0; j < n; j++)
+				Ar[i] += A[i][j] * r[j];
+		}
+		double scalar_mult_Ar_r = 0;
+		for (size_t i = 0; i < n; i++)
+			scalar_mult_Ar_r += Ar[i] * r[i];
+		
+		tau = scalar_mult_r_r / scalar_mult_Ar_r;
+
+		alpha = 1. / (1 - (1. / alpha_prev) * (tau / tau_prev) * (scalar_mult_r_r / scalar_mult_r_r_prev));
+
+		for (size_t i = 0; i < n; i++)
+			for (size_t j = 0; j < n; j++)
+				i != j ? E[i][j] = 0 : E[i][j] = 1;
+
+		for (size_t i = 0; i < n; i++) 
+			for (size_t j = 0; j < n; j++) 
+				E[i][j] -= tau * A[i][j];
+
+		for (size_t i = 0; i < n; i++)
+		{
+			tau_b[i] = alpha * tau * b[i];
+			E_x[i] = 0;
+			for (size_t j = 0; j < n; j++)
+				E_x[i] += E[i][j] * x[j];
+			E_x[i] *= alpha;
+		}
+
+		stop = true;
+		for (size_t i = 0; i < n; i++)
+		{
+			double new_x = E_x[i] + (1 - alpha) * x[i] + tau_b[i];
+			if (abs(x[i] - new_x) > eps)
+				stop = false;
+			x[i] = new_x;
+		}
+
+		alpha_prev = alpha;
+		tau_prev = tau;
+		scalar_mult_r_r_prev = scalar_mult_r_r;		
+	}
+	delete[] r;
+	delete[] Ar;
+	delete[] E[0];
+	delete[] E;
+	delete[] tau_b;
+	delete[] E_x;
 }
 
 
