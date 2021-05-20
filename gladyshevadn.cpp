@@ -82,7 +82,22 @@ void gladyshevadn::lab4()
  */
 void gladyshevadn::lab5()
 {
+    double eps = 1e-10;
+    double norm = 1;
+    double* tempX = new double[N];
+    for (int i=0; i<N; i++) x[i] = 0;
+    while(norm>eps){
+        norm = 0;
+        for (int i=0; i<N; i++){
+            tempX[i] = b[i];
+            for (int j=0; j<N; j++) if (j!=i) tempX[i] -= A[i][j] * x[j];
+            tempX[i] /= A[i][i];
+            norm += fabs(tempX[i]-x[i]);
+            x[i] = tempX[i];
+        }
+    }
 
+    delete[]tempX;
 }
 
 
