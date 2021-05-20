@@ -126,6 +126,7 @@ void velmiskinnm::lab4()
     //второй этап - поиск корней
     y[0] = b[0] / StD[0][0];
 
+    ///Ly = b
     for(int i = 1; i < N; i++){
         double c = b[i];
 
@@ -153,7 +154,26 @@ void velmiskinnm::lab4()
  */
 void velmiskinnm::lab5()
 {
-
+    double eps = 1e-21;
+    for(int i = 0; i < N; i++){
+        x[i] = b[i];
+    }
+    bool exit = false;
+    while(!exit){
+        exit = true;
+        for(int i = 0; i < N; i++){
+            double temp_x = b[i];
+            for(int j = 0; j < N; j++){
+                if(i == j)
+                    continue;
+                temp_x -= A[i][j] * x[j];
+            }
+            temp_x /= A[i][i];
+            if(abs(x[i] - temp_x) > eps)
+                exit = false;
+            x[i] = temp_x;
+        }
+    }
 }
 
 
