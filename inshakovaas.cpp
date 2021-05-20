@@ -101,7 +101,26 @@ void inshakovaas::lab4()
  */
 void inshakovaas::lab5()
 {
-
+    double eps = 1e-9;
+    for(int i = 0; i < N; i++){
+        x[i] = b[i];
+    }
+    bool ex = false;
+    while(!ex){
+        ex = true;
+        for(int i = 0; i < N; i++){
+            double temp = b[i];
+            for(int j = 0; j < N; j++){
+                if(i == j)
+                    continue;
+                temp -= A[i][j] * x[j];
+            }
+            temp /= A[i][i];
+            if(abs(x[i] - temp) > eps)
+                ex = false;
+            x[i] = temp;
+        }
+    }
 }
 
 
