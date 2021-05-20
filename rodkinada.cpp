@@ -73,7 +73,35 @@ void rodkinada::lab3()
  */
 void rodkinada::lab4()
 {
+    double** S = new double* [N];
+    double* D = new double[N];
+    for (int i = 0; i < N; i++) S[i] = new double[N];
 
+    for (int i = 0; i < N; i++) {
+        double s = 0;
+        for (int k = 0; k < i; k++) s += S[k][i] * S[k][i] * D[k];
+        D[i] = (A[i][i] - s < 0 ? -1 : 1);
+        S[i][i] = sqrt(abs(A[i][i] - s));
+
+        for (int j = i + 1; j < N; j++) {
+            s = 0;
+            for (int k = 0; k < j; k++) s += S[k][i] * S[k][j] * D[k];
+            S[i][j] = (A[i][j] - s) / (S[i][i] * D[i]);
+        }
+    }
+
+
+    double* y = new double[N];
+    for (int i = 0; i < N; i++) {
+        double s = 0;
+        for (int k = 0; k < i; k++) s += S[k][i] * D[k] * y[k];
+        y[i] = (b[i] - s) / (S[i][i] * D[i]);
+    }
+
+    for (int i = N - 1; i >= 0; i--) {
+        for (int k = i + 1; k < N; k++) y[i] -= S[i][k] * x[k];
+        x[i] = y[i] / S[i][i];
+    }
 }
 
 
