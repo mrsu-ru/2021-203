@@ -169,7 +169,45 @@ void guskovaim::lab5() //метод Зейделя
  */
 void guskovaim::lab6()
 {
+    double *r = new double[N];
+    double *Ar = new double[N];
+    bool flag = false;
 
+    for (int i = 0; i < N; i++) {
+        x[i] = 0;
+    }
+
+    while(!flag){
+        flag = true;
+        for(int i = 0; i < N; i++){
+            r[i] = b[i];
+            for(int j = 0; j < N; j++){
+                r[i] -= A[i][j] * x[j];
+            }
+        }
+        for(int i = 0; i < N; i++){
+            Ar[i] = 0;
+            for(int j = 0; j < N; j++){
+                Ar[i] += A[i][j] * r[j];
+            }
+        }
+        double rr = 0;
+        for(int i = 0; i < N; i++){
+            rr += r[i] * r[i];
+        }
+        double Arr = 0;
+        for(int i = 0; i < N; i++){
+            Arr += Ar[i] * r[i];
+        }
+        double tau = rr / Arr;
+        for(int i = 0; i < N; i++) {
+            double tmpx = x[i];
+            x[i] += tau * r[i];
+            if(abs(tmpx - x[i]) > 1e-9){
+                flag = false;
+            }
+        }
+    }
 }
 
 
