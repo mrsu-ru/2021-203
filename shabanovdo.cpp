@@ -159,37 +159,33 @@ x[i] = b[i];
  */
 void shabanovdo::lab5()
 {
-double *prev_x = new double [N];
-double tmpOne, tmpTwo;
-double norma;
-while(true){
 
-for(int i = 0; i < N; i++)
-prev_x[i] = x[i];
+    double* prev_x = new double[N];
 
-for(int i = 0; i < N; i++){
+    while (true) {
+        for (int i = 0; i < N; i++)
+            prev_x[i] = x[i];
 
-tmpOne = 0;
-for(int j = i + 1; j < N; j++)
-tmpOne += A[i][j] * x[j];
+        for (int i = 0; i < N; i++) {
+            double sum = 0;
 
-tmpTwo = 0;
-for(int j = i - 1; j >= 0; j--)
-tmpTwo += A[i][j] * x[j];
+            for (int j = 0; j < i; j++)
+                sum += A[i][j] * x[j];
 
-x[i] = (b[i] - (tmpOne + tmpTwo)) / A[i][i];
-}
-norma = 0;
+            for (int j = i + 1; j < N; j++)
+                sum += A[i][j] * prev_x[j];
 
-for (int i = 0; i < N; i++){
-norma += abs(x[i] - prev_x[i]);
-}
+            x[i] = (b[i] - sum) / A[i][i];
+        }
 
-if(norma > 1e-21) break;
-}
+        double diff = abs(x[0] - prev_x[0]);
+        for (int i = 1; i < N; i++){
+            if (abs(x[i] - prev_x[i]) > diff)
+                diff = abs(x[i] - prev_x[i]);}
 
-delete [] prev_x;
-
+        if (diff < 1e-21)
+            break;
+    }
 }
 
 
@@ -199,6 +195,53 @@ delete [] prev_x;
  */
 void shabanovdo::lab6()
 {
+double* F = new double[N];
+    double* r = new double[N];
+    double* alfa = new double[N];
+    double a, norma, k = 0, ts1, ts2;
+    double eps = 1e-19;
+
+    do {
+        for (int i = 0; i < N; i++) {
+            double tmp = 0;
+            for (int j = 0; j < N; j++) {
+                tmp += A[i][j] * x[j];
+            }
+            r[i] = tmp - b[i];
+            F[i] = 2 * r[i];
+        }
+
+        double* Ar = new double[N];
+        for (int i = 0; i < N; i++) {
+            double tmps = 0;
+            for (int j = 0; j < N; j++) {
+                tmps += A[i][j] * r[j];
+            }
+            Ar[i] = tmps;
+        }
+        ts1 = 0, ts2 = 0;
+        for (int i = 0; i < N; i++) {
+            ts1 += Ar[i] * r[i];
+            ts2 += Ar[i] * Ar[i];
+        }
+        a = ts1 / (2 * ts2);
+
+        double*y = new double[N];
+        for (int i = 0; i < N; i++)
+            y[i] = x[i];
+
+        for (int i = 0; i < N; i++)
+            x[i] = x[i] - a * F[i];
+
+
+        norma = 0;
+        for (int i = 0; i < N; i++)
+            norma += (y[i] - x[i])*(y[i] - x[i]);
+
+
+        delete[] y;
+        delete[] Ar;
+    } while (sqrt(norma) > eps);
 
 }
 
