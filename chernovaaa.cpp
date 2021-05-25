@@ -30,7 +30,7 @@ void chernovaaa::lab2()
     for (int i = 0; i < N; i++)
     {
         for (int j = i + 1; j < N; j++)
-        {
+        {/
             double c = A[j][i]/A[i][i];
             for (int k = i; k < N; k++)
             {
@@ -65,7 +65,20 @@ void chernovaaa::lab2()
  */
 void chernovaaa::lab3()
 {
-
+    double *al = new double[N];
+    double *bet = new double[N];
+    al[0] = -A[0][1] / A[0][0];
+    bet[0] = b[0] / A[0][0];
+    for (int i = 1; i <= N - 1; i++)
+    {
+        al[i] = -A[i][i + 1] / (A[i][i - 1] * al[i - 1] + A[i][i]);
+        bet[i] = (b[i] - A[i][i - 1] * bet[i - 1]) / (A[i][i - 1] * al[i - 1] + A[i][i]);
+    }
+    x[N - 1] = bet[N - 1];
+    for (int i = N - 2; i >= 0; i--)
+    {
+        x[i] = bet[i] + al[i] * x[i + 1];
+    }
 }
 
 
