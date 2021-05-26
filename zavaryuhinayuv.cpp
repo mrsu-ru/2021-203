@@ -172,6 +172,52 @@ void zavaryuhinayuv::lab5() {
  */
 void zavaryuhinayuv::lab6() {
 
+    double *r = new double[N];
+    double *ar= new double[N];
+
+    bool temp = true;
+
+    while(temp){
+        temp=false;
+
+        for (int i=0; i<N; i++){
+            r[i]=b[i];
+             for (int j=0; j<N; j++){
+                 r[i]=r[i]-A[i][j]*x[j];
+
+             }
+        }
+        for (int i=0; i<N; i++){
+            ar[i]=0;
+            for (int j=0; j<N; j++){
+                ar[i]=ar[i]+A[i][j]*r[j];
+
+            }
+        }
+        double t=0;
+        double ar2=0;
+
+        for (int i=0; i<N; i++){
+            t=t+ar[i]*r[i];
+            ar2=ar2+ar[i]*ar[i];
+        }
+
+        t= t/ar2;
+
+        for (int i=0; i<N; i++){
+            double temp_x=x[i];
+            x[i]=x[i]+t*r[i];
+            if (fabs(x[i]-temp_x)>1.e-9){ temp=true;}
+        }
+
+
+    }
+
+    delete[] r;
+    delete[] ar;
+
+
+
 }
 
 
