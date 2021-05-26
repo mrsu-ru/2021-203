@@ -183,7 +183,46 @@ void velmiskinnm::lab5()
  */
 void velmiskinnm::lab6()
 {
+    double eps = 1e-21;
+    double *y = new double[N];
+    double *num = new double[N];
 
+    bool exit = false;
+
+    for (int i = 0; i < N; i++)
+        x[i] = 0;
+    while(!exit){
+        exit = true;
+
+        for(int i = 0; i < N; i++){
+            y[i] = b[i];
+            for(int j = 0; j < N; j++){
+                y[i] -= A[i][j] * x[j];
+            }
+        }
+        for(int i = 0; i < N; i++){
+            num[i] = 0;
+            for(int j = 0; j < N; j++){
+                num[i] += A[i][j] * y[j];
+            }
+        }
+        double den = 0;
+        for(int i = 0; i < N; i++){
+            den += y[i] * y[i];
+        }
+        double result = 0;
+        for(int i = 0; i < N; i++){
+            result += num[i] * y[i];
+        }
+        double tau = den / result;
+        for(int i = 0; i < N; i++) {
+            double tmpx = x[i];
+            x[i] += tau * y[i];
+            if(abs(tmpx - x[i]) > eps){
+                exit = false;
+            }
+        }
+    }
 }
 
 
@@ -193,6 +232,65 @@ void velmiskinnm::lab6()
  */
 void velmiskinnm::lab7()
 {
+    double eps = 1e-20;
+    double *r = new double[N];
+    double *num = new double[N];
+    double *prev_x = new double[N];
+    bool exit = false;
+    bool first = true;
+    double alpha = 1;
+
+    double tau, add_den, add_tau;
+    for (int i = 0; i < N; i++) {
+        x[i] = 0;
+        prev_x[i] = 0;
+    }
+    while (!exit) {
+        exit = true;
+        for (int i = 0; i < N; i++) {
+            r[i] = b[i];
+            for (int j = 0; j < N; j++) {
+                r[i] -= A[i][j] * x[j];
+            }
+        }
+        for (int i = 0; i < N; i++) {
+            num[i] = 0;
+            for (int j = 0; j < N; j++) {
+                num[i] += A[i][j] * r[j];
+            }
+        }
+        double den = 0;
+        for (int i = 0; i < N; i++) {
+            den += r[i] * r[i];
+        }
+        double result = 0;
+        for (int i = 0; i < N; i++) {
+            result += num[i] * r[i];
+        }
+
+        tau = den / result;
+        if (first) {
+            for (int i = 0; i < N; i++) {
+                x[i] = tau * b[i];
+            }
+            first = false;
+            add_den = den;
+            add_tau = tau;
+            exit = false;
+            continue;
+        }
+        alpha = 1 / (1 - (tau * den) / (alpha * add_tau * add_den));
+        for (int i = 0; i < N; i++) {
+            double tmpx = x[i];
+            x[i] = alpha * x[i] + (1 - alpha) * prev_x[i] - tau * alpha * r[i];
+            prev_x[i] = tmpx;
+            if (abs(tmpx - x[i]) > eps) {
+                exit = false;
+            }
+        }
+        add_den = den;
+        add_tau = tau;
+    }
 
 }
 
@@ -205,7 +303,35 @@ void velmiskinnm::lab8()
 
 void velmiskinnm::lab9()
 {
-
+    double eps = 1e-3;
+    double *y = new double[N];
+    double *prev_y = new double[N];
+    double totalValue;
+    for(int i = 0; i < N; i++)
+        prev_y[i] = 1;
+    while(true){
+        for(int i = 0; i < N; i++){
+            double sum = 0;
+            for(int j = 0; j < N; j++){
+                sum += A[i][j] * prev_y[j];
+            }
+            y[i] = sum;
+        }
+        double tmp = totalValue;
+        for(int i = 0; i < N; i++) {
+            if(abs(y[i]) > eps && abs(prev_y[i]) > eps){
+                totalValue = y[i] / prev_y[i];
+                break;
+            }
+        }
+        if(abs(totalValue - tmp) < eps){
+            break;
+        }
+        for(int i = 0; i < N; i++){
+            prev_y[i] = y[i];
+        }
+    }
+    std::cout << "Total value === " << totalValue;
 }
 
 
