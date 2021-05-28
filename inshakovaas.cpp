@@ -1,4 +1,5 @@
 ﻿#include "inshakovaas.h"
+#include "../../../Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.25.28610/include/cmath"
 
 /**
  * Введение в дисциплину
@@ -130,7 +131,45 @@ void inshakovaas::lab5()
  */
 void inshakovaas::lab6()
 {
+    double *r = new double[N];
+    double *Ar = new double[N];
+    bool temp = false;
 
+    for (int i = 0; i < N; i++) {
+        x[i] = 0;
+    }
+
+    while(!temp){
+        temp = true;
+        for(int i = 0; i < N; i++){
+            r[i] = b[i];
+            for(int j = 0; j < N; j++){
+                r[i] -= A[i][j] * x[j];
+            }
+        }
+        for(int i = 0; i < N; i++){
+            Ar[i] = 0;
+            for(int j = 0; j < N; j++){
+                Ar[i] += A[i][j] * r[j];
+            }
+        }
+        double rr = 0;
+        for(int i = 0; i < N; i++){
+            rr += r[i] * r[i];
+        }
+        double Arr = 0;
+        for(int i = 0; i < N; i++){
+            Arr += Ar[i] * r[i];
+        }
+        double tau = rr / Arr;
+        for(int i = 0; i < N; i++) {
+            double tmpx = x[i];
+            x[i] += tau * r[i];
+            if(abs(tmpx - x[i]) > 1e-9){
+                temp = false;
+            }
+        }
+    }
 }
 
 
