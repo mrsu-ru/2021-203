@@ -217,13 +217,113 @@ void guskovaim::lab6()
  */
 void guskovaim::lab7()
 {
+    double *re = new double[N];
+    double *Ark = new double[N];
+    double *xk = new double[N];
+    double x_prev = 0, t = 0, tk = 0, alpha = 1, Sr = 0, SArk = 0, SArk_prev = 0;
+    bool flag = false;
+    bool first = true;
 
+    for (int i = 0; i < N; i++) {
+        x[i] = 0;
+        re[i] = 0;
+        Ark[i] = 0;
+        xk[i] = 0;
+    }
+
+    while (!flag) {
+        flag = true;
+        for (int i = 0; i < N; i++) {
+            re[i] = b[i];
+            for (int j = 0; j < N; j++) {
+                re[i] -= A[i][j] * x[j];
+            }
+        }
+        for (int i = 0; i < N; i++) {
+            Ark[i] = 0;
+            for (int j = 0; j < N; j++) Ark[i] += A[i][j] * re[j];
+        }
+        if (first) {
+            first = false;
+            flag = false;
+            for (int i = 0; i < N; i++) {
+                Sr += re[i] * re[i];
+                SArk += Ark[i] * re[i];
+            }
+            t = Sr / SArk;
+            for (int i = 0; i < N; i++) {
+                x[i] = t * b[i];
+            }
+        }
+        tk = t, SArk_prev = SArk;
+        Sr = 0;
+        SArk = 0;
+        for (int i = 0; i < N; i++) {
+            Sr += re[i] * re[i];
+            SArk += Ark[i] * re[i];
+        }
+        t = Sr / SArk;
+        alpha = 1.0 / (1 - (t * Sr) / (alpha * tk * SArk_prev));
+        for (int i = 0; i < N; i++) {
+            x_prev = x[i];
+            x[i] = t * alpha * re[i] + alpha * x[i] + (1 - alpha) * xk[i];
+            xk[i] = x_prev;
+            if (fabs(x[i] - x_prev) > 1E-9) flag = false;
+        }
+    }
+    delete[] re;
+    delete[] Ark;
+    delete[] xk;
 }
 
-
+/**
+ * Метод вращения для нахождения собственных значений матрицы
+ */
 void guskovaim::lab8()
 {
+    double t = 2;
+    int maxi, maxj;
+    double **B = new double *[N];
+    for (int i = 0; i < N; i++) B[i] = new double[N];
 
+    for(int i = 0; i < N; i++){
+        for(int j = 0; j < N; j++)
+            if(A[i][j] != A[j][i]) return;
+    }
+
+    while (t > 1) {
+        maxi = 0, maxj = 1;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (i == j) continue;
+                if (fabs(A[i][j]) > fabs(A[maxi][maxj])) {
+                    maxi = i;
+                    maxj = j;
+                }
+            }
+        }
+        double phi = atan(2 * A[maxi][maxj] / (-A[maxi][maxi] + A[maxj][maxj])) / 2;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) B[i][j] = A[i][j];
+        }
+        for (int r = 0; r < N; r++) {
+            B[r][maxi] = A[r][maxi] * cos(phi) - A[r][maxj] * sin(phi);
+            B[r][maxj] = A[r][maxi] * sin(phi) + A[r][maxj] * cos(phi);
+        }
+        for (int c = 0; c < N; c++) {
+            A[maxi][c] = B[maxi][c] * cos(phi) - B[maxj][c] * sin(phi);
+            A[maxj][c] = B[maxi][c] * sin(phi) + B[maxj][c] * cos(phi);
+        }
+        A[maxi][maxj] = 0;
+        t = 0;
+        for (int i = 0; i < N; i++) {
+            for (int j = i + 1; j < N; j++)
+                t += A[i][j] * A[i][j] + A[j][i] * A[j][i];
+        }
+    }
+    for (int i = 0; i < N; i++) x[i] = A[i][i];
+    for (int i = 0; i < N; i++) delete[] B[i];
+    delete[] B;
 }
 
 
