@@ -111,7 +111,22 @@ void rodkinada::lab4()
  */
 void rodkinada::lab5()
 {
-
+    double eps = 1e-10;
+    double n = 1;
+    double* tX = new double[N];
+    for (int i = 0; i < N;i++) x[i] = 0;
+    while (n>eps)
+    {
+        n = 0;
+        for (int i = 0; i < N;i++) {
+            tX[i] = b[i];
+            for (int j = 0; j < N;j++) if (j != i) tX[i] -= A[i][j] * x[j];
+            tX[i] /= A[i][i];
+            n += fabs(tX[i] - x[i]);
+            x[i] = tX[i];
+        }
+    }
+    delete[]tX;
 }
 
 
