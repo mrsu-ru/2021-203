@@ -84,8 +84,8 @@ void gladyshevadn::lab4()
                 S[i][i] = sqrt(D[i] * A[i][i]);
             }
             else {
-                for (int l=0; l<i; l++) A[i][j] -= S[l][i]*S[l][j]*D[l];
-                A[i][j] /= (S[i][i] * D[i]);
+                for (int l=0; l<j; l++) A[i][j] -= S[l][i]*S[l][j]*D[l];
+                S[i][j] = A[i][j] / (S[i][i] * D[i]);
             }
         }
     }
