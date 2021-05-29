@@ -154,7 +154,7 @@ void potapkinayuyu::lab4()
 }
 
 
-}
+
 
 
 
