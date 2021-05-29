@@ -1,5 +1,4 @@
 ﻿#include "inshakovaas.h"
-#include "../../../Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.25.28610/include/cmath"
 
 /**
  * Введение в дисциплину
