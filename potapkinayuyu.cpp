@@ -108,7 +108,53 @@ void potapkinayuyu::lab3()
 void potapkinayuyu::lab4()
 {
 
+
+	double* D = new double[N];
+	double** S = new double* [N];
+	S[0] = new double[N * N];
+
+	for (int i = 0; i < N; i++) {
+		S[i] = S[0] + i * N;
+	}
+
+	for (int i = 0; i < N; i++) {
+		double c = A[i][i];
+		for (int k = 0; k < i; k++) {
+			c -= S[k][i] * S[k][i] * D[k];
+		}
+		D[i] = c > 0 ? 1 : -1;
+		S[i][i] = sqrt(c * D[i]);
+		for (int j = i + 1; j < N; j++) {
+			double c2 = A[i][j];
+			for (int k = 0; k < i; k++) {
+				c2 -= S[k][i] * D[k] * S[k][j];
+			}
+			S[i][j] = c2 / (S[i][i] * D[i]);
+		}
+	}
+
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < i; j++) {
+			b[i] -= S[j][i] * D[j] * b[j];
+		}
+		b[i] /= S[i][i] * D[i];
+	}
+
+
+	for (int i = N - 1; i >= 0; i--) {
+		for (int k = i + 1; k < N; k++) {
+			b[i] -= S[i][k] * x[k];
+		}
+		x[i] = b[i] / S[i][i];
+	}
+
+	delete[] S[0];
+	delete[] S;
+	delete[] D;
 }
+
+
+
 
 
 
