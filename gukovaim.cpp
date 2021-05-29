@@ -217,7 +217,63 @@ void guskovaim::lab6()
  */
 void guskovaim::lab7()
 {
+    double *re = new double[N];
+    double *Ark = new double[N];
+    double *xk = new double[N];
+    double x_prev = 0, t = 0, tk = 0, alpha = 1, Sr = 0, SArk = 0, SArk_prev = 0;
+    bool flag = false;
+    bool first = true;
 
+    for (int i = 0; i < N; i++) {
+        x[i] = 0;
+        re[i] = 0;
+        Ark[i] = 0;
+        xk[i] = 0;
+    }
+
+    while (!flag) {
+        flag = true;
+        for (int i = 0; i < N; i++) {
+            re[i] = b[i];
+            for (int j = 0; j < N; j++) {
+                re[i] -= A[i][j] * x[j];
+            }
+        }
+        for (int i = 0; i < N; i++) {
+            Ark[i] = 0;
+            for (int j = 0; j < N; j++) Ark[i] += A[i][j] * re[j];
+        }
+        if (first) {
+            first = false;
+            flag = false;
+            for (int i = 0; i < N; i++) {
+                Sr += re[i] * re[i];
+                SArk += Ark[i] * re[i];
+            }
+            t = Sr / SArk;
+            for (int i = 0; i < N; i++) {
+                x[i] = t * b[i];
+            }
+        }
+        tk = t, SArk_prev = SArk;
+        Sr = 0;
+        SArk = 0;
+        for (int i = 0; i < N; i++) {
+            Sr += re[i] * re[i];
+            SArk += Ark[i] * re[i];
+        }
+        t = Sr / SArk;
+        alpha = 1.0 / (1 - (t * Sr) / (alpha * tk * SArk_prev));
+        for (int i = 0; i < N; i++) {
+            x_prev = x[i];
+            x[i] = t * alpha * re[i] + alpha * x[i] + (1 - alpha) * xk[i];
+            xk[i] = x_prev;
+            if (fabs(x[i] - x_prev) > 1E-9) flag = false;
+        }
+    }
+    delete[] re;
+    delete[] Ark;
+    delete[] xk;
 }
 
 
