@@ -72,7 +72,37 @@ void gladyshevadn::lab3()
  */
 void gladyshevadn::lab4()
 {
+    double** S = new double*[N];
+    for (int i=0; i<N; i++) S[i] = new double[N];
+    double* D = new double[N];
+    // S
+    for (int i=0; i<N; i++){
+        for (int j=i; j<N; j++){
+            if (j==i){
+                for (int l=0; l<i; l++) A[i][i] -= S[l][i]*S[l][i]*D[l];
+                D[i] = (A[i][i]>=0) ? 1 : -1;
+                S[i][i] = sqrt(D[i] * A[i][i]);
+            }
+            else {
+                for (int l=0; l<i; l++) A[i][j] -= S[l][i]*S[l][j]*D[l];
+                A[i][j] /= (S[i][i] * D[i]);
+            }
+        }
+    }
+    // S*Dy=b
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < i; j++) b[i] -= S[j][i] * D[j] * b[j];
+        b[i] /= S[i][i] * D[i];
+    }
+    // Sx = y
+    for (int i = N - 1; i >= 0; i--) {
+        for (int k = i + 1; k < N; k++) b[i] -= S[i][k] * x[k];
+        x[i] = b[i] / S[i][i];
+    }
 
+    for (int i = 0; i < N; i++) delete[] S[i];
+    delete[] S;
+    delete[] D;
 }
 
 
