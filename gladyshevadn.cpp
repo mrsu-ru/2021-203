@@ -137,7 +137,43 @@ void gladyshevadn::lab5()
  */
 void gladyshevadn::lab6()
 {
+    double eps = 1e-9;
+    double* r = new double[N];
+    double* Ar = new double[N];
+    for (int i=0; i<N; i++) x[i]=0;
+    bool flag = true;
+    while(flag){
+        flag = false;
+        // начальная невязка
+        for (int i=0; i<N; i++){
+            r[i] = b[i];
+            for (int j=0; j<N; j++) r[i] -= A[i][j]*x[j];
+        }
+        // считаем A*r[k]
+        for (int i=0; i<N; i++){
+            Ar[i] = 0;
+            for (int j=0; j<N; j++) Ar[i] += A[i][j] * r[j];
+        }
+        // считаем (A*r[k],r[k])
+        double Arr = 0;
+        for (int i=0; i<N; i++){
+            Arr += Ar[i]*r[i];
+        }
+        // считаем норму Ar*Ar
+        double norma_Ar = 0;
+        for (int i=0; i<N; i++) norma_Ar += Ar[i] * Ar[i];
+        // считаем тау
+        double t = Arr / norma_Ar;
+        // считаем икс и сравниваем разницу с заданной точностью
+        for(int i=0; i<N; i++){
+            double temp_x = x[i];
+            x[i] += t * r[i];
+            if (abs(temp_x - x[i]) > eps) flag = true;
+        }
+    }
 
+    delete[]r;
+    delete[]Ar;
 }
 
 
