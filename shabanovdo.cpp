@@ -317,7 +317,35 @@ x[i] = A[i][i];
 }
 void shabanovdo::lab9() 
 {
-    
+int n = N;
+double *y = new double[n];
+double *y_next = new double[n];
+double eps =1e-2;
+double lyambda = 1;
+double lyambda_next = 0;
+
+for(int i = 0; i<n; i++)
+y[i] = b[i];
+
+do{
+for(int i=0; i<n; i++){
+for(int j=0; j<n; j++){
+y_next[i] += A[i][j]*y[j];
+}
+}
+lyambda = lyambda_next;
+
+for(int i=0; i<n; i++){
+if(y[i]!= 0 && y_next[i] != 0){
+lyambda_next = y_next[i]/y[i];
+break;
+}
+}
+for (int i=0; i<n; i++)
+y[i]=y_next[i];
+}while(fabs(lyambda_next - lyambda)>eps);
+
+cout<<"Result: "<<lyambda_next << endl;    
 }
 
 std::string shabanovdo::get_name()
