@@ -174,6 +174,8 @@ void zavaryuhinayuv::lab6() {
 
     double *r = new double[N];
     double *ar= new double[N];
+    double t=0;
+    double ar2=0;
 
     bool temp = true;
 
@@ -225,8 +227,80 @@ void zavaryuhinayuv::lab6() {
  * Метод сопряженных градиентов
  */
 void zavaryuhinayuv::lab7() {
+    double *r= new double[N];
+    double *ar = new double[N];
+    double *kx= new double[N];
+    double r_sc=0;
+    double ar_sc=0;
+    double t;
+    double a=1;
+    bool temp=true;
+
+    for (int i = 0; i < N; i++) {
+        x[i] = 0;
+        r[i] = -b[i];
+    }
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            r[i] = r[i] + A[i][j] * x[j];
+        }
+    }
+
+    for (int i = 0; i < N; i++) {
+        ar[i] = 0;
+        for (int j = 0; j < N; j++) {
+            ar[i]= ar[i]+ A[i][j] * r[j];
+        }
+        }
+    for (int i = 0; i < N; i++) {
+        r_sc += r[i] * r[i];
+        ar_sc += ar[i] * r[i];
+    }
+     t=r_sc/ar_sc;
+    for (int i = 0; i < N; i++) {
+        x[i] = t * b[i];
+    }
+
+    while (temp) {
+        temp = false;
+        for (int i = 0; i < N; i++) {
+            r[i] = -b[i];
+        }
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                r[i] = r[i] + A[i][j] * x[j];
+            }
+        }
+        for (int i = 0; i < N; i++) {
+            ar[i] = 0;
+            for (int j = 0; j < N; j++) {
+                ar[i] = ar[i] + A[i][j] * r[j];
+            }
+        }
+        double t_t = t;
+        double t_sc = ar_sc;
+        r_sc = 0;
+        ar_sc = 0;
+        for (int i = 0; i < N; i++) {
+            r_sc = r_sc + r[i] * r[i];
+            ar_sc = ar_sc + ar[i] * r[i];
+        }
+        t = r_sc / ar_sc;
+        a = 1.0 / (1 - (t * r_sc) / (a * t_t * t_sc));
+        for (int i = 0; i < N; i++) {
+            double t_x = x[i];
+            x[i] = a * x[i] + (1 - a) * kx[i] - t * a * r[i];
+            kx[i] = t_x;
+            if (fabs(x[i] - t_x) > 1e-9) temp = true;
+        }
+    }
+
+    delete[] r;
+    delete[] ar;
+    delete kx;
 
 }
+
 
 
 void zavaryuhinayuv::lab8() {
