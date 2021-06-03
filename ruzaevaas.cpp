@@ -98,7 +98,49 @@ double *first = new double[N];
  */
 void ruzaevaas::lab4()
 {
+ int *D = new int[N];
+    double **S = new double*[N];
+    for (int i = 0; i < N; i++){
+        S[i] = new double[N];
+        for (int j = 0; j < N; j++)
+            S[i][j] = 0;
+    }
+    double tmp;
+    for (int i = 0; i < N; i++){
+        tmp = A[i][i];
+        for (int j = 0; j < i; j++) tmp -= D[j]*pow(S[j][i], 2);
 
+        if (tmp > 0) D[i] = 1;
+        else D[i] =- 1;
+
+        S[i][i] = sqrt(D[i] * tmp);
+        double tmp_two;
+        for (int j=i+1; j<N; j++){
+            tmp_two = A[i][j];
+            for (int k=0; k<j; k++) tmp_two -= D[k] * S[k][i] * S[k][j];
+            S[i][j] = tmp_two / (D[i] * S[i][i]);
+        }
+    }
+
+    double *y;
+    y = new double[N];
+    y[0] = b[0]/S[0][0];
+
+    for (int i = 1; i < N; i++){
+        for (int j = i; j < N; j++) b[j] -= S[i-1][j]*y[i-1];
+        y[i] = b[i]/S[i][i];
+    }
+
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < N; j++)
+            S[i][j] *= D[i];
+
+    x[N-1] = y[N-1]/S[N-1][N-1];
+
+    for (int i = N - 2; i >= 0; i--){
+        for (int j = i ; j >= 0; j--) y[j] -= S[j][i+1]*x[i+1];
+        x[i] = y[i]/S[i][i];
+    }
 }
 
 
