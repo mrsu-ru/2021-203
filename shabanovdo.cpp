@@ -250,9 +250,51 @@ double* F = new double[N];
 /**
  * Метод сопряженных градиентов
  */
+
 void shabanovdo::lab7()
 {
+    double *residual = new double[N];
+    double *tmp_arr = new double[N];
+    double *Az = new double[N];
+    double norm_one = 0;
+    double norma;
+    for (int i = 0; i < N; i++) {
+        norm_one += pow(b[i], 2);
+        residual[i] = b[i];
+        for (int j = 0; j<N; j++)
+            residual[i] -= A[i][j] * x[j];
+        tmp_arr[i] = residual[i];
+    }
 
+    do {
+        for (int i = 0; i<N; i++) {
+            Az[i] = 0;
+            for (int j = 0; j<N; j++)
+                Az[i] += A[i][j] * tmp_arr[j];
+        }
+
+        double alf = 0;
+        double tmp = 0;
+        for (int i = 0; i < N; i++) {
+            alf += residual[i] * residual[i];
+            tmp += Az[i] * residual[i];
+        }
+        alf /= tmp;
+
+        double bet = 0; tmp = 0;
+        for (int i = 0; i < N; i++) {
+            tmp += residual[i] * residual[i];
+            x[i] += alf*tmp_arr[i];
+            residual[i] -= alf*Az[i];
+            bet += residual[i] * residual[i];
+        }
+        norma = sqrt(bet / norm_one);
+        bet /= tmp;
+
+        for (int i = 0; i < N; i++)
+            tmp_arr[i] = residual[i] + bet * tmp_arr[i];
+    }
+    while (norma > 1e-21);
 }
 
 
