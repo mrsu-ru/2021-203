@@ -297,7 +297,45 @@ void velmiskinnm::lab7()
 
 void velmiskinnm::lab8()
 {
+    double eps = 1e-9;
+    double t = 1;
+    double** B = new double* [N];
+    for(int i = 0; i < N; i++)
+        B[i] = new double[N];
 
+    while(t > eps){
+        int max_i = 1, max_j = 0;
+        for(int i = 0; i < N; i++)
+            for(int j = 0; j < i; j++)
+                if(abs(A[i][j]) > abs(A[max_i][max_j])){
+                    max_i = i;
+                    max_j = j;
+                }
+        double phi = 0.5 * atan(2 * A[max_i][max_j] / (A[max_i][max_i] - A[max_j][max_j]));
+        for(int i = 0; i < N; i++)
+            for(int j = 0; j < N; j++)
+                B[i][j] = A[i][j];
+        for(int i = 0; i < N; i++){
+            B[i][max_i] = A[i][max_i] * cos(phi) + A[i][max_j] * sin(phi);
+            B[i][max_j] = A[i][max_j] * cos(phi) - A[i][max_i] * sin(phi);
+        }
+        for(int i = 0; i < N; i++){
+            A[i][max_i] = B[i][max_i];
+            A[i][max_j] = B[i][max_j];
+        }
+        for(int i = 0; i < N; i++){
+            A[max_i][i] = B[max_i][i] * cos(phi) + B[max_j][i] * sin(phi);
+            A[max_j][i] = B[max_j][i] * cos(phi) - B[max_i][i] * sin(phi);
+        }
+        t = 0;
+        for(int i = 0; i < N; i++)
+            for(int j = 0; j < i; j++) {
+                t += A[i][j] * A[i][j];
+            }
+        t *= 2;
+    }
+    for(int i = 0; i < N; i++)
+        x[i] = A[i][i];
 }
 
 
