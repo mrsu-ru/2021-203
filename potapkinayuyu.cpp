@@ -163,7 +163,29 @@ void potapkinayuyu::lab4()
  */
 void potapkinayuyu::lab5()
 {
+    double eps=0.0000000000000001;
 
+    double* y=new double[N];
+    double r=0;
+    double var=0;
+
+    for (int i=0;i<N;i++){
+        x[i]=0;
+    }
+
+    do{
+        for (int i=0;i<N;i++)	y[i]=x[i];
+
+        for (int i=0;i<N;i++){
+            var=0; r=0;
+            for (int j=0;j<i;j++) var+=A[i][j]*x[j];
+            for (int j=i+1;j<N;j++)	var+=A[i][j]*x[j];
+
+            x[i]=(b[i]-var)/A[i][i];
+            for (int i=0;i<N;i++) r+=sqrt((x[i]-y[i])*(x[i]-y[i]));
+        }
+    } while (r>=eps);
+    delete[] y;
 }
 
 
