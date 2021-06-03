@@ -71,7 +71,24 @@ double** arr_help = new double*[N];
  */
 void ruzaevaas::lab3()
 {
+double *first = new double[N];
+    double *second = new double[N];
 
+    first[0] = -A[0][1] / A[0][0];
+    second[0] = b[0] / A[0][0];
+
+    for (int i = 1; i < N - 1; i++) {
+        first[i] = -A[i][i + 1] / (A[i][i - 1] * first[i - 1] + A[i][i]);
+        second[i] = (-A[i][i - 1] * second[i - 1] + b[i]) / (A[i][i - 1] * first[i - 1] + A[i][i]);
+    }
+
+    second[N - 1] = (-A[N - 1][N - 2] * second[N - 2] + b[N - 1]) / (A[N - 1][N - 2] * first[N - 2] + A[N - 1][N - 1]);
+
+    x[N - 1] = second[N - 1];
+
+    for (int i = N - 2; i >= 0; i--) {
+        x[i] = second[i] + first[i] * x[i + 1];
+    }
 }
 
 
