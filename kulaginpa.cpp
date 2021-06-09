@@ -395,13 +395,97 @@ void kulaginpa::lab7()
 
 void kulaginpa::lab8()
 {
+	double eps = 1e-9;
+	double t = 1;
+	double **B = new double*[N];
+	B[0] = new double[N*N];
+	for (int i = 0; i < N; i++)
+		B[i] = B[0] + i * N;
 
+	while (t > eps) {
+		int i_fix = 1;
+		int j_fix = 0;
+		for (int i = 0; i < N; i++)
+			for (int j = 0; j < i; j++)
+				if (abs(A[i][j]) > abs(A[i_fix][j_fix])) {
+					i_fix = i;
+					j_fix = j;
+				}
+
+		double phi = 0.5 * atan(2 * A[i_fix][j_fix] / (A[i_fix][i_fix] - A[j_fix][j_fix]));
+
+		for (int i = 0; i < N; i++)
+			for (int j = 0; j < N; j++)
+				B[i][j] = A[i][j];
+
+		for (int i = 0; i < N; i++) 
+		{
+			B[i][i_fix] = A[i][i_fix] * cos(phi) + A[i][j_fix] * sin(phi);
+			B[i][j_fix] = A[i][j_fix] * cos(phi) - A[i][i_fix] * sin(phi);
+		}
+		for (int i = 0; i < N; i++) 
+		{
+			A[i][i_fix] = B[i][i_fix];
+			A[i][j_fix] = B[i][j_fix];
+		}
+		for (int j = 0; j < N; j++) 
+		{
+			A[i_fix][j] = B[i_fix][j] * cos(phi) + B[j_fix][j] * sin(phi);
+			A[j_fix][j] = B[j_fix][j] * cos(phi) - B[i_fix][j] * sin(phi);
+		}
+		t = 0;
+		for (int i = 0; i < N; i++)
+			for (int j = 0; j < i; j++)
+				t += A[i][j] * A[i][j];
+		t *= 2;
+	}
+	for (int i = 0; i < N; i++)
+		x[i] = A[i][i];
+
+	delete[] B[0];
+	delete[] B;
 }
 
 
 void kulaginpa::lab9()
 {
+	double eps = 1E-3;
+	double *y = new double[N];
+	double *prev_y = new double[N];
+	double max_lambda = 0;
+	for (int i = 0; i < N; i++)
+		prev_y[i] = 1;
+	bool stop = false;
 
+	while (!stop) 
+	{
+		for (int i = 0; i < N; i++) 
+		{
+			y[i] = 0;
+			for (int j = 0; j < N; j++) 
+				y[i] += A[i][j] * prev_y[j];
+		}
+		double tmp = max_lambda;
+		for (int i = 0; i < N; i++) 
+		{
+			if (abs(y[i]) > eps && abs(prev_y[i]) > eps) 
+			{
+				max_lambda = y[i] / prev_y[i];
+				break;
+			}
+		}
+
+		for (int i = 0; i < N; i++) 
+			prev_y[i] = y[i];
+
+		if (abs(max_lambda - tmp) < eps) 
+			stop = true;
+
+	}
+	cout << "max eigenvalue: " << max_lambda;
+
+	delete[] prev_y;
+	delete[] y;
 }
 
 
