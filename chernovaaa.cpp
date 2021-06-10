@@ -133,7 +133,53 @@ void chernovaaa::lab5()
  */
 void chernovaaa::lab6()
 {
+    double* f = new double[N];
+    double* r = new double[N];
+    double* ar = new double[N];
+    double* y = new double[N];
+    double ak, dif = 1, t, sk1, sk2;
 
+    while((sqrt(dif) > 1e-19))
+    {
+        for (int i = 0; i < N; i++)
+        {
+            t = 0;
+            for (int j = 0; j < N; j++) {
+                t += A[i][j] * x[j];
+            }
+            r[i] = t - b[i];
+            f[i] = 2 * r[i];
+        }
+
+        for (int i = 0; i < N; i++)
+        {
+            t = 0;
+            for (int j = 0; j < N; j++) {
+                t += A[i][j] * r[j];
+            }
+            ar[i] = t;
+        }
+
+        sk1 = 0;
+        sk2 = 0;
+        for (int i = 0; i < N; i++) {
+            sk1 += abs(ar[i] * r[i]);
+            sk2 += abs(ar[i] * ar[i]);
+        }
+        ak = sk1 / (2 * sk2);
+
+        for (int i = 0; i < N; i++) {
+            y[i] = x[i];
+        }
+        for (int i = 0; i < N; i++) {
+            x[i] = x[i] - ak * f[i];
+        }
+
+        dif = 0;
+        for (int i = 0; i < N; i++) {
+            dif += (y[i] - x[i]) * (y[i] - x[i]);
+        }
+    }
 }
 
 
