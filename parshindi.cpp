@@ -196,7 +196,44 @@ void parshindi::lab7()
 
 void parshindi::lab8()
 {
-
+double eps = 1e-9;
+    double t = 1;
+    double** B = new double* [N];
+    for(int i = 0; i < N; i++)
+        B[i] = new double[N];
+    while(t > eps){
+        int ii = 1, jj = 0;
+        for(int i = 0; i < N; i++)
+            for(int j = 0; j < i; j++)
+                if(abs(A[i][j]) > abs(A[ii][jj])){
+                    ii = i;
+                    jj = j;
+                }
+        double phi = 0.5 * atan(2 * A[ii][jj] / (A[ii][ii] - A[jj][jj]));
+        for(int i = 0; i < N; i++)
+            for(int j = 0; j < N; j++)
+                B[i][j] = A[i][j];
+        for(int i = 0; i < N; i++){
+            B[i][ii] = A[i][ii] * cos(phi) + A[i][jj] * sin(phi);
+            B[i][jj] = A[i][jj] * cos(phi) - A[i][ii] * sin(phi);
+        }
+        for(int i = 0; i < N; i++){
+            A[i][ii] = B[i][ii];
+            A[i][jj] = B[i][jj];
+        }
+        for(int i = 0; i < N; i++){
+            A[ii][i] = B[ii][i] * cos(phi) + B[jj][i] * sin(phi);
+            A[jj][i] = B[jj][i] * cos(phi) - B[ii][i] * sin(phi);
+        }
+        t = 0;
+        for(int i = 0; i < N; i++)
+            for(int j = 0; j < i; j++) {
+                t += A[i][j] * A[i][j];
+            }
+        t *= 2;
+    }
+    for(int i = 0; i < N; i++)
+        x[i] = A[i][i];
 }
 
 
