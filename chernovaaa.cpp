@@ -189,7 +189,68 @@ void chernovaaa::lab6()
  */
 void chernovaaa::lab7()
 {
+    double* r = new double[N];
+    double* z = new double[N];
+    double* Ar = new double[N];
+    double* rp = new double[N];
 
+    double d;
+    for(int i = 0; i < N; i++)
+        d += b[i] * b[i];
+
+    for (int i = 0; i < N; i++){
+        double t = 0;
+        for(int j = 0; j < N; j++){
+            t += A[i][j] * x[j];
+        }
+        r[i] = b[i] - t;
+        z[i] = r[i];
+    }
+    double alf, bet, tr = 100;
+    while((sqrt(tr / d) > 1e-21)){
+        for (int i = 0; i < N; i++){
+            double t = 0;
+            for(int j = 0; j < N; j++){
+                t += A[i][j] * z[j];
+            }
+            Ar[i] = t;
+        }
+
+        double t1 = 0, t2 = 0;
+        for (int i = 0; i < N; i++){
+            t1 += r[i] * r[i];
+            t2 += Ar[i] * z[i];
+        }
+        alf = t1/t2;
+
+        for(int i=0; i < N; i++){
+            rp[i] = r[i];
+        }
+
+        for(int i = 0; i < N; i++){
+            x[i] = x[i] + alf * z[i];
+            r[i] = r[i] - alf * Ar[i];
+        }
+
+        for (int i = 0; i < N; i++){
+            t1 += r[i] * r[i];
+            t2 += rp[i] * rp[i];
+        }
+        bet = t1/t2;
+
+        for(int i = 0; i < N; i++){
+            z[i] = r[i] + bet * z[i];
+        }
+        tr = 0;
+        for(int i = 0; i < N; i++){
+            tr += r[i] * r[i];
+        }
+    }
+
+    delete[] r;
+    delete[] rp;
+    delete[] Ar;
+    delete[] z;
 }
 
 
