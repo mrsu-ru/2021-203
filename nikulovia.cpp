@@ -128,7 +128,42 @@ while (!ex)
  */
 void nikulovia::lab6()
 {
-
+    double eps = 1e-9;
+    double *r = new double[N];
+    double *Ar = new double[N];
+    bool exit = false;
+    for (int i = 0; i < N; i++) x[i] = 0;
+    while(!exit){
+        exit = true;
+        for(int i = 0; i < N; i++){
+            r[i] = b[i];
+            for(int j = 0; j < N; j++){
+                r[i] -= A[i][j] * x[j];
+            }
+        }
+        for(int i = 0; i < N; i++){
+            Ar[i] = 0;
+            for(int j = 0; j < N; j++){
+                Ar[i] += A[i][j] * r[j];
+            }
+        }
+        double rr = 0;
+        for(int i = 0; i < N; i++){
+            rr += r[i] * r[i];
+        }
+        double Arr = 0;
+        for(int i = 0; i < N; i++){
+            Arr += Ar[i] * r[i];
+        }
+        double t = rr / Arr;
+        for(int i = 0; i < N; i++) {
+            double tmpx = x[i];
+            x[i] += t * r[i];
+            if(abs(tmpx - x[i]) > eps){
+                exit = false;
+            }
+        }
+    }
 }
 
 
@@ -144,7 +179,44 @@ void nikulovia::lab7()
 
 void nikulovia::lab8()
 {
-
+    double eps = 1e-9;
+    double t = 1;
+    double** B = new double* [N];
+    for(int i = 0; i < N; i++)
+        B[i] = new double[N];
+    while(t > eps){
+        int ii = 1, jj = 0;
+        for(int i = 0; i < N; i++)
+            for(int j = 0; j < i; j++)
+                if(abs(A[i][j]) > abs(A[ii][jj])){
+                    ii = i;
+                    jj = j;
+                }
+        double phi = 0.5 * atan(2 * A[ii][jj] / (A[ii][ii] - A[jj][jj]));
+        for(int i = 0; i < N; i++)
+            for(int j = 0; j < N; j++)
+                B[i][j] = A[i][j];
+        for(int i = 0; i < N; i++){
+            B[i][ii] = A[i][ii] * cos(phi) + A[i][jj] * sin(phi);
+            B[i][jj] = A[i][jj] * cos(phi) - A[i][ii] * sin(phi);
+        }
+        for(int i = 0; i < N; i++){
+            A[i][ii] = B[i][ii];
+            A[i][jj] = B[i][jj];
+        }
+        for(int i = 0; i < N; i++){
+            A[ii][i] = B[ii][i] * cos(phi) + B[jj][i] * sin(phi);
+            A[jj][i] = B[jj][i] * cos(phi) - B[ii][i] * sin(phi);
+        }
+        t = 0;
+        for(int i = 0; i < N; i++)
+            for(int j = 0; j < i; j++) {
+                t += A[i][j] * A[i][j];
+            }
+        t *= 2;
+    }
+    for(int i = 0; i < N; i++)
+        x[i] = A[i][i];
 }
 
 
