@@ -111,7 +111,47 @@ void nikulovia::lab8()
 
 void nikulovia::lab9()
 {
+    double e = 1e-3;
+    double *y = new double[N];
+    double *yp = new double[N];
+    double d = 1e9;
+    double lmax = 0;
+    double l = 0;
 
+  
+    for (int i = 0; i < N; i++) 
+    {
+        yp[i] = 1;
+    }
+
+    while (d > e) 
+    {
+        for (int i = 0; i < N; i++) 
+        {
+            y[i] = 0;
+            for (int j = 0; j < N; j++) 
+                y[i] += A[i][j] * yp[j];
+        }
+
+        l = 0;
+        for (int i = 0; i < N; i++)
+            if (fabs(y[i]) > e && fabs(yp[i]) > e) 
+            {
+                l = y[i] / yp[i];
+                break;
+            }
+
+        d = fabs(l - lmax);
+        lmax = l;
+
+        for (int i = 0; i < N; i++)
+            yp[i] = y[i];
+    }
+
+    cout << "lmax  = " << lmax << endl;
+
+    delete[] y;
+    delete[] yp;
 }
 
 
